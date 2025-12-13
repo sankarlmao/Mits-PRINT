@@ -1,0 +1,137 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" 
+}
+
+
+
+//enumerators
+
+
+enum ColorMode { 
+  COLOR
+  BLACK_WHITE
+}
+
+enum Orientation {
+  LANDSCAPE
+  PORTRAIT
+}
+
+enum PrintStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PRINTED
+  PRINTING
+}
+
+model Student {
+  id  String @id @default(cuid())
+  email String @unique 
+  name String 
+  password String
+
+  //orders array
+  orders Order[]
+
+  payments Payment[]
+  createdAt DateTime @default(now())
+
+  
+}
+
+
+//Print
+
+
+model Print {
+  id String @id @default(cuid())
+  fileUrl String
+  copies Int @default(1)
+  colorMode ColorMode
+  orientation Orientation @default(PORTRAIT)
+  printOnBothSides Boolean @default(false)
+  status PrintStatus @default(PENDING)
+  pageRange String? 
+
+
+  orderId String
+  verification Order @relation(fields: [orderId], references: [id])
+
+  createdAt DateTime @default(now())
+  
+
+  @@index([orderId])
+
+
+}
+
+
+
+model Order {
+
+  id String @id @default(cuid())
+  otpCode String
+  
+  studentId String
+  student Student @relation(fields: [studentId],references: [id])
+
+  prints Print[]
+
+  //payment
+  payment Payment?
+
+  createdAt DateTime @default(now())
+
+  @@index([studentId])
+  @@index([otpCode])
+}
+
+
+model Payment {
+  
+  id String @id @default(cuid())
+  amount  Int //store as paisa  (10.25 as 1025)
+  currency String @default("INR")
+  status PaymentStatus @default(PENDING)
+
+
+
+  orderId String @unique
+  order Order @relation(fields: [orderId] ,references: [id])
+
+  //razorpay fields
+  razorpayOrderId  String @unique
+  razorpayPaymentId String?
+  razorpaySignature String?
+
+
+  //Student
+  studentId String @unique
+  student Student @relation(fields: [studentId], references: [id])
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  @@index([razorpayOrderId])
+}
+
+
+

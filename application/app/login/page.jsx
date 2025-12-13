@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import React from 'react'
+import handleLogin from './actions';
 
 const LoginPage = () => {
   return (
@@ -11,36 +12,36 @@ const LoginPage = () => {
         <Image src={'/college_logo.png'} alt='College Logo ' height={100} width={400} className='rounded-xl' quality={100}/>
         <h1 className=' font-bold text-white text-4xl text-center font-changa min-lg:text-7xl'>MITS PRINT </h1>
 
-    <p className='text-secondary-color text-lg text-center font-bold font-'>Smart approach for printing lab outputs and project reports without crowding.</p>
+    <p className=' px-2 text-secondary-color text-lg text-center font-bold font-'>Smart approach for printing lab outputs and project reports without crowding.</p>
         </div>
 
 
         <div className='w-full flex justify-center items-center h-[70%] min-lg:w-[60%] min-lg:h-full'>
 
 
-        <div className='w-[90%] max-w-[500px] h-[350px] bg-secondary-color shadow-gray-400 shadow-lg rounded-2xl pt-6'>
+        <form action={handleLogin} className='w-[90%] max-w-[500px] h-[350px] bg-secondary-color shadow-gray-400 shadow-lg rounded-2xl py-6 flex flex-col '>
 
-        
-
+            
+            <span className='text-2xl text-center w-full text-primary-color font-semibold text-3xl'> Login</span>
             {/* EMAIL */}
             <div className='w-full h-[80px] flex flex-col px-6 gap-3 mb-6' >
-            <span className='text-text-primary-color font-semibold  text-xl'>College mail ID :</span>
-            <input type="text" className='border-1 border-gray-400 h-[50px] p-2 text-xl rounded-lg outline-0 focus:border-green-500' placeholder='student email' />
+            <label className='text-text-primary-color font-semibold  text-xl'>College mail ID :</label>
+            <input type="email" className='border-1 border-gray-400 h-[50px] p-2 text-2xl rounded-lg outline-0 focus:border-2 focus:border-green-500' placeholder='student email'   required autoComplete='college-email' name='collegeMail'/>
             </div>
 
                 {       /* PASSWORD */}
                <div className='w-full h-[80px] flex flex-col px-6 gap-3 mb-5'>
-            <span className='text-text-primary-color font-semibold text-xl'>Password :</span>
-            <input type="text" className='border-1 border-gray-400 h-[50px] p-2 text-xl rounded-lg outline-0 focus:border-green-500' placeholder='password' />
+            <label className='text-text-primary-color font-semibold text-xl'>Password :</label>
+            <input type="password" className='border-1 border-gray-400 h-[50px] p-2 text-2xl rounded-lg outline-0 focus:border-2 font focus:border-green-500' placeholder='password'  required name='password' autoComplete='current-password'/>
             </div>
 
 
             <div className='flex items-center justify-center w-full px-6 '>
-                <button className='bg-green-600 text-white h-[50px] w-full cursor-pointer rounded-xl text-xl  font-semibold hover:bg-green-500 hover:text-text-primary-color transition-all delay-75'>Login</button>
+                <button className='bg-green-600 text-white h-[50px] w-full cursor-pointer rounded-xl text-xl -semibold hover:bg-green-500  transition-all delay-75' >Login</button>
             </div>
 
             
-        </div>
+        </form>
         </div>
     </section>
   )

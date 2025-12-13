@@ -9,12 +9,16 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@prisma/client": "^7.1.0",
+    "enums": "^1.0.3",
     "next": "16.0.10",
+    "prisma": "^7.1.0",
     "react": "19.2.1",
     "react-dom": "19.2.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/node": "25.0.1",
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
     "tailwindcss": "^4"
