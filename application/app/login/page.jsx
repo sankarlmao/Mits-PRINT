@@ -26,13 +26,13 @@ const LoginPage = () => {
             {/* EMAIL */}
             <div className='w-full h-[80px] flex flex-col px-6 gap-3 mb-6' >
             <label className='text-text-primary-color font-semibold  text-xl'>College mail ID :</label>
-            <input type="email" className='border-1 border-gray-400 h-[50px] p-2 text-2xl rounded-lg outline-0 focus:border-2 focus:border-green-500' placeholder='student email'   required autoComplete='college-email' name='collegeMail'/>
+            <input type="email" className='border-1 border-gray-400 h-[50px] p-2 text-lg rounded-lg outline-0 focus:border-2 focus:border-green-500' placeholder='student email'   required autoComplete='college-email' name='collegeMail'/>
             </div>
 
                 {       /* PASSWORD */}
                <div className='w-full h-[80px] flex flex-col px-6 gap-3 mb-5'>
             <label className='text-text-primary-color font-semibold text-xl'>Password :</label>
-            <input type="password" className='border-1 border-gray-400 h-[50px] p-2 text-2xl rounded-lg outline-0 focus:border-2 font focus:border-green-500' placeholder='password'  required name='password' autoComplete='current-password'/>
+            <input type="password" className='border-1 border-gray-400 h-[50px] p-2 text-lg rounded-lg outline-0 focus:border-2 font focus:border-green-500' placeholder='password'  required name='password' autoComplete='current-password'/>
             </div>
 
 

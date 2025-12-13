@@ -1,19 +1,10 @@
 "use server";
 
-import { NextResponse } from "next/server";
-import {PrismaClient} from "@prisma/client"
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
+import { error } from "node:console";
+import { findUserByEmailAndPassword } from "../../lib/services/auth";
 
 
-const pool = new Pool({
-    connectionString:process.env.DATABASE_URL,
-});
 
-
- const prisma = new PrismaClient({
-    adapter:new PrismaPg(pool)
- });
 
 export default async function handleLogin(formData){
 
@@ -24,16 +15,14 @@ export default async function handleLogin(formData){
 
     
     if(!email || !password){
-         throw new Error("Invalid input");
+        return {error:"Invalid inputs"}
     }
 
 
-    const user = await prisma.student.findUnique({
-        where:{email:email, password:password}
-    })
+    const user =  await findUserByEmailAndPassword(email,password)
 
     if(!user){
-        throw new Error("Invalid credentails");
+        return {error:"Invalid credentials "}
     }
 
     console.log(user);
