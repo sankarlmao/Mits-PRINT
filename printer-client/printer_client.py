@@ -3,8 +3,7 @@ import os
 from datetime import datetime
 
 # ================= CONFIG =================
-ORDERS_API = "http://localhost:3000/api/orders"
-SECRET_KEY = "aekhgfegiygtg3yi4gbfsbjghqihqw"
+ORDERS_API_URL = "https://mits-print-five.vercel.app/api/file?SECRET_KEY=mitsprint123456789"
 DOWNLOAD_DIR = "downloads"
 TIMEOUT = 30
 # =========================================
@@ -14,8 +13,7 @@ os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 def get_orders():
     response = requests.get(
-        ORDERS_API,
-        params={"SECRET_KEY": SECRET_KEY},
+        ORDERS_API_URL,
         timeout=TIMEOUT
     )
     response.raise_for_status()
