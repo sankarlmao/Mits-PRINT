@@ -1,14 +1,17 @@
 "use client";
 import { useState } from "react";
 import FileCard from "./FIleCard";
+import PaymentBox from "./PaymentBox";
 
 export default function PrintLoader() {
   const [files, setFiles] = useState([]);
 
+  const [showPayBox , setShowPayBox] = useState(false);
+
 
 
   function calculateAmount(){
-
+    setShowPayBox(true)
     console.log(files)
   }
 
@@ -48,7 +51,10 @@ export default function PrintLoader() {
   }
 
   return (
-    <div className={`max-w-xl space-y-4  px-3   ${files.length==0?"flex justify-center items-center h-screen":""}`} >
+    <div className={`max-w-xl space-y-4  px-3 w-full  ${files.length==0?"flex justify-center items-center h-screen":""}`} >
+
+
+      <PaymentBox open={showPayBox} onClose={()=>setShowPayBox(false)}></PaymentBox>
 
       {/* Upload Box */}
       <label className=" rounded-lg p-5 text-center cursor-pointer ">
