@@ -1,12 +1,10 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "../../../../lib/prisma";
 
 const TWO_WEEKS = 60 * 60 * 24 * 14;
 
 const handler = NextAuth({
-  adapter: PrismaAdapter(prisma),
 
   providers: [
     Credentials({
