@@ -1,27 +1,72 @@
 "use client";
+
+import { useState } from "react";
+import { FaIndianRupeeSign } from "react-icons/fa6";
 import { handleCancel } from "../app/(dashboard)/action";
-export default function PaymentBox({ open, onClose }) {
+
+export default function PaymentBox({ open, onClose, amount = 1200 }) {
+  const [loading, setLoading] = useState(false);
+
   if (!open) return null;
 
+  const handlePay = async () => {
+    setLoading(true);
+
+    // simulate payment / call Razorpay here
+    setTimeout(() => {
+      setLoading(false);
+      // success flow here
+    }, 2000);
+  };
+
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center ">
-      
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+
       {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/50"
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
 
-      />
+      {/* Modal */}
+      <div className="relative w-[90%] max-w-sm rounded-2xl bg-white p-6 shadow-xl">
 
-      {/* Modal box */}
-      <div className="relative bg-white rounded-lg shadow-lg p-6 w-[90%] max-w-md h-[300px] max-w-[400px]  flex flex-col justify-center ">
-        
+        {/* Loading state */}
+        {loading ? (
+          <div className="flex h-[220px] flex-col items-center justify-center">
+            <span className="text-lg font-medium text-gray-700">
+              Processing payment…
+            </span>
+            <span className="mt-2 text-sm text-gray-400">
+              Please do not close this window
+            </span>
+          </div>
+        ) : (
+          <>
+            {/* Amount */}
+            <div className="flex items-center justify-center gap-1 py-6 text-4xl font-semibold text-gray-900">
+              <FaIndianRupeeSign className="text-3xl" />
+              {amount}
+            </div>
 
+            {/* Buttons */}
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={handlePay}
+                className="h-11 rounded-xl bg-green-600 text-lg font-medium text-white
+                           hover:bg-green-700 transition"
+              >
+                Pay Now
+              </button>
 
-      <div className="flex flex-col gap-3">
-          <button className="h-12 w-full bg-green-500 rounded-xl text-2xl text-white cursor-pointer">Pay</button>
-        <button className="h-12 w-full bg-red-500 rounded-2xl text-2xl text-white cursor-pointer" onClick={handleCancel}>Cancel</button>
-      
-      </div>
+              <button
+                onClick={() => handleCancel(onClose)}
+                className="h-11 rounded-xl border border-gray-300 text-lg
+                           text-gray-700 hover:bg-gray-100 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </>
+        )}
+
       </div>
     </div>
   );

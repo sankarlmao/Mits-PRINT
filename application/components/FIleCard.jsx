@@ -5,12 +5,14 @@ import React, { useState } from 'react'
 const FileCard = ({item, update, removeFile, index}) => {
 
 
+    
+
     const [customValueClicked,setCustomValueClicked] = useState(false)
     
   return (
    <div
      
-          className=" rounded-lg p-4 space-y-3 bg-white  min-w-[90%] h-[300px]"
+          className=" rounded-lg p-4 space-y-3 bg-white  min-w-[90%] h-[200px]"
         >
           <div className="font-medium truncate">
             {item.file.name}
@@ -123,7 +125,7 @@ const FileCard = ({item, update, removeFile, index}) => {
 
           <button
             onClick={() => removeFile(index)}
-            className="text-red-500 text-xs"
+            className="text-red-500 font-light text-lg cursor-pointer" 
           >
             Remove
           </button>
