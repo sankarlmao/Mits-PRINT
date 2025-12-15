@@ -2,18 +2,21 @@
 import { useState } from "react";
 import FileCard from "./FIleCard";
 import PaymentBox from "./PaymentBox";
-import Footer from "./Footer";
+import { calculateAmountServer } from "../app/(dashboard)/action";
 
 export default function PrintLoader() {
   const [files, setFiles] = useState([]);
 
   const [showPayBox , setShowPayBox] = useState(false);
+  const [amount , setAmount] = useState("");
 
 
 
-  function calculateAmount(){
+  async function  calculateAmount(){
     setShowPayBox(true)
-    calc
+     const a =  await calculateAmountServer(files)
+      setAmount(a)
+     
   }
 
   const allowedTypes = [
@@ -29,7 +32,7 @@ export default function PrintLoader() {
       .map(file => ({
         file,
         copies: 1,
-        color: "BLACK_WHITE",      // false = B/W
+        color: "BLACK_WHITE",      
         doubleSide: false, 
         orientation:"PORTRAIT",
         pagesRange:"ALL",
@@ -38,6 +41,8 @@ export default function PrintLoader() {
 
     setFiles(prev => [...prev, ...validFiles]);
   }
+
+
 
   function update(index, key, value) {
     setFiles(prev =>
@@ -55,7 +60,7 @@ export default function PrintLoader() {
     <div className={`max-w-xl space-y-4  px-3 w-full  ${files.length==0?"flex justify-center items-center h-screen":""}`} >
 
 
-      <PaymentBox open={showPayBox} onClose={()=>setShowPayBox(false)}></PaymentBox>
+      <PaymentBox open={showPayBox} onClose={()=>setShowPayBox(false) } amount={amount}></PaymentBox>
 
       {/* Upload Box */}
       <label className=" rounded-lg p-5 text-center cursor-pointer ">

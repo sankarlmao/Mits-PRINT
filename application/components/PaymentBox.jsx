@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { handleCancel } from "../app/(dashboard)/action";
 
-export default function PaymentBox({ open, onClose, amount = 1200 }) {
+export default function PaymentBox({ open, onClose, amount }) {
   const [loading, setLoading] = useState(false);
 
   if (!open) return null;
@@ -43,7 +43,7 @@ export default function PaymentBox({ open, onClose, amount = 1200 }) {
             {/* Amount */}
             <div className="flex items-center justify-center gap-1 py-6 text-4xl font-semibold text-gray-900">
               <FaIndianRupeeSign className="text-3xl" />
-              {amount}
+              {(Number.parseFloat(amount+.00)/100).toFixed(2)}
             </div>
 
             {/* Buttons */}
