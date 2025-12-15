@@ -1,0 +1,21 @@
+USING SYSTEMD
+
+sudo nano /etc/systemd/system/print-agent.service
+
+
+[Unit]
+Description=Print Agent Service
+After=network.target cups.service
+
+[Service]
+ExecStart=/usr/bin/python3 /home/print/printer_agent.py
+Restart=always
+User=print
+
+[Install]
+WantedBy=multi-user.target
+
+
+sudo systemctl daemon-reload
+sudo systemctl enable print-agent
+sudo systemctl start print-agent
