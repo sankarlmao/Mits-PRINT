@@ -5,7 +5,7 @@ import { CiMenuBurger } from "react-icons/ci";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
-
+  
   return (
     <div className="w-full bg-white h-[70px] flex justify-between items-center px-3 shadow-sm shadow-[#a8a8a8] min-lg:px-[200px]">
 

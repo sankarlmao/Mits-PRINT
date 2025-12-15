@@ -6,6 +6,7 @@ export async function middleware(req) {
 
  
   if (
+    pathname === "/login" ||
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/_next") ||
     pathname === "/favicon.ico" ||
@@ -14,11 +15,12 @@ export async function middleware(req) {
   ) {
     return NextResponse.next();
   }
-  
+
   const token = await getToken({
     req,
     secret: process.env.NEXTAUTH_SECRET,
   });
+  console.log(token)
 
 if (!token) {
   return NextResponse.redirect(new URL("/login", req.url));

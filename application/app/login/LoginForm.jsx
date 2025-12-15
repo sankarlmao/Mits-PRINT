@@ -28,7 +28,6 @@ const LoginForm = () => {
       setLoad(false);
     } else {
         setLoad(false)
-      redirect('/')
     }
   }
 
