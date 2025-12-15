@@ -58,7 +58,7 @@ export async function calculateAmountServer(files){
         //COLOR
 
         else{
-            let per_page = 300 //1.5 in rupee
+            let per_page = 300 //3  in rupee
             
             if(!file.doubleSide){
                 totalCost += per_page*file.pageCount*file.copies
@@ -70,7 +70,8 @@ export async function calculateAmountServer(files){
             }
         }
     })
-    totalCost + 150
+    
+    totalCost += 150 //extra page
 
     return totalCost
 
