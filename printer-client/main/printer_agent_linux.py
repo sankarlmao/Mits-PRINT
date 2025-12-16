@@ -9,7 +9,7 @@ import hashlib
 API_URL = "https://mitsprint.vercel.app/api/file?SECRET_KEY=mitsprint123456789"
 CHECK_INTERVAL = 30  # seconds
 
-DOWNLOAD_DIR = "downloads"
+DOWNLOAD_DIR = "/home/sankar/PRINT/"
 PRINTED_LOG = "printed.log"
 
 EPSON_PRINTER_NAME = "EPSON"
