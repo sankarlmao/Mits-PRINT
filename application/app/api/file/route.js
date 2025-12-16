@@ -13,7 +13,7 @@ export async function GET(request) {
   
 
   const orders = await getOrderfromDB()
-
+  
 
   return NextResponse.json({
     success:true,

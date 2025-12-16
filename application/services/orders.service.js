@@ -27,7 +27,7 @@ export  async function createOrder(items){
           printOnBothSides: item.doubleSide,
           copies: item.copies,
           orientation: item.orientation,
-          pageRange: item.pageRange,
+          pagesRange: item.pagesRange,
           customRange: item.customRange,
         })),
       },
@@ -66,7 +66,21 @@ const orders = await prisma.order.findMany({
 });
 
 //after recieving there orders i have to put the status 
-return orders
+
+
+await prisma.print.updateMany({
+  where: {
+    orderId: { in: orders.map(o => o.id) },
+    status: "PENDING",
+  },
+  data: {
+    status: "PRINTING",
+  },
+});
+
+
+
+return orders;
 
 
 
