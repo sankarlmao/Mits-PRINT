@@ -1,24 +1,45 @@
+import os
+import time
 import requests
 import subprocess
-import time
-import os
-from urllib.parse import urlparse
+import hashlib
 
-SERVER_URL = "https://www.example.com/api/print-queue"
-POLL_INTERVAL = 5  # seconds
+# ================= CONFIG =================
 
-# CUPS printer names
-EPSON_PRINTER = "Epson_Color"
-XEROX_PRINTER = "Xerox_BW"
+API_URL = "https://mitsprint.vercel.app/api/file?SECRET_KEY=mitsprint123456789"
+CHECK_INTERVAL = 30  # seconds
 
-DOWNLOAD_DIR = "/tmp/print_jobs"
+DOWNLOAD_DIR = "downloads"
+PRINTED_LOG = "printed.log"
+
+EPSON_PRINTER_NAME = "EPSON"
+XEROX_PRINTER_NAME = "XEROX"
+
+# ==========================================
+
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 
-def download_pdf(url):
-    filename = os.path.basename(urlparse(url).path)
+def already_printed(print_id: str) -> bool:
+    if not os.path.exists(PRINTED_LOG):
+        return False
+    with open(PRINTED_LOG, "r") as f:
+        return print_id in f.read()
+
+
+def mark_as_printed(print_id: str):
+    with open(PRINTED_LOG, "a") as f:
+        f.write(print_id + "\n")
+
+
+def download_pdf(url: str) -> str:
+    filename = hashlib.md5(url.encode()).hexdigest() + ".pdf"
     path = os.path.join(DOWNLOAD_DIR, filename)
 
+    if os.path.exists(path):
+        return path
+
+    print(f"[↓] Downloading PDF")
     r = requests.get(url, timeout=30)
     r.raise_for_status()
 
@@ -28,89 +49,79 @@ def download_pdf(url):
     return path
 
 
-def choose_printer(print_job):
-    """
-    Epson:
-      - COLOR
-      - single sided only
-    Xerox:
-      - BLACK_WHITE
-      - duplex allowed
-    """
-    if print_job["colorMode"] == "COLOR":
-        return EPSON_PRINTER
-    return XEROX_PRINTER
-
-
-def build_lp_command(printer, job, file_path):
+def print_pdf_linux(
+    pdf_path: str,
+    printer: str,
+    copies: int,
+    duplex: bool
+):
     cmd = [
         "lp",
         "-d", printer,
-        "-n", str(job["copies"])
+        "-n", str(copies),
     ]
 
-    # Duplex handling
-    if printer == XEROX_PRINTER and job["printOnBothSides"]:
+    if duplex:
         cmd += ["-o", "sides=two-sided-long-edge"]
     else:
         cmd += ["-o", "sides=one-sided"]
 
-    # Color handling
-    if printer == XEROX_PRINTER:
-        cmd += ["-o", "ColorModel=Gray"]
-    else:
-        cmd += ["-o", "ColorModel=RGB"]
+    cmd.append(pdf_path)
 
-    # Orientation
-    if job["orientation"] == "LANDSCAPE":
-        cmd += ["-o", "orientation-requested=4"]
-
-    # Page range
-    if job["pageRange"] == "CUSTOM" and job["customRange"]:
-        cmd += ["-o", f"page-ranges={job['customRange']}"]
-
-    cmd.append(file_path)
-    return cmd
-
-
-def print_job(job):
-    printer = choose_printer(job)
-    pdf_path = download_pdf(job["fileUrl"])
-    cmd = build_lp_command(printer, job, pdf_path)
-
-    print(f"[→] Printing {pdf_path} on {printer}")
     subprocess.run(cmd, check=True)
-    print("[✓] Print triggered successfully")
 
 
-def fetch_orders():
-    r = requests.get(SERVER_URL, timeout=10)
-    r.raise_for_status()
-    return r.json()["orders"]
+def handle_print_job(job: dict):
+    print_id = job["id"]
+
+    if already_printed(print_id):
+        return
+
+    file_url = job["fileUrl"]
+    copies = job.get("copies", 1)
+    color = job.get("colorMode", "BLACK_WHITE")
+    duplex = job.get("printOnBothSides", False)
+
+    # ===== PRINTER SELECTION =====
+    if color == "COLOR":
+        printer = EPSON_PRINTER_NAME
+        duplex = False
+    else:
+        printer = XEROX_PRINTER_NAME
+
+    pdf_path = download_pdf(file_url)
+
+    print(f"[🖨] Printing {print_id} on {printer}")
+    print_pdf_linux(pdf_path, printer, copies, duplex)
+
+    mark_as_printed(print_id)
+    print(f"[✓] Completed {print_id}")
 
 
-def main():
-    print("🖨️ Print agent started")
+def poll_server():
+    print("🖨 Printer Agent Started (Linux)")
+    print("--------------------------------")
+
     while True:
         try:
-            orders = fetch_orders()
+            r = requests.get(API_URL, timeout=20)
+            r.raise_for_status()
+            payload = r.json()
 
-            for order in orders:
-                for job in order["prints"]:
-                    if job["status"] != "PENDING":
-                        continue
+            if not payload.get("success"):
+                time.sleep(CHECK_INTERVAL)
+                continue
 
-                    print_job(job)
-
-                    # OPTIONAL: update job status back to server
-                    # requests.post("https://www.example.com/api/update-status",
-                    #               json={"printId": job["id"], "status": "SUCCESS"})
+            for order in payload.get("data", []):
+                for job in order.get("prints", []):
+                    if job.get("status") == "PENDING":
+                        handle_print_job(job)
 
         except Exception as e:
-            print("⚠️ Error:", e)
+            print("[ERROR]", e)
 
-        time.sleep(POLL_INTERVAL)
+        time.sleep(CHECK_INTERVAL)
 
 
 if __name__ == "__main__":
-    main()
+    poll_server()
