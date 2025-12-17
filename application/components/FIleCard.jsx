@@ -23,7 +23,7 @@ const FileCard = ({item, update, removeFile, index}) => {
             {/* Copies */}
             <div className="flex items-center gap-2">
               <span>Copies</span>
-                 <select className="h-8 px-2 text-sm border rounded-md" onChange= { e=> update(index, "copies",e.target.value)}>
+                 <select className="h-8 px-2 text-sm border rounded-md" onChange= { e=> update(index, "copies",Number.parseInt(e.target.value))}>
     {[1,2,3,4,5,6,7,8,9,10].map(n => (
       <option key={n} value={n}> {n}</option>
     ))}
