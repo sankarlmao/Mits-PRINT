@@ -1,19 +1,17 @@
-import { getServerSession } from 'next-auth';
-import Navbar from '../../components/Navbar'
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
+import Providers from "./providers";
 
+export default function Layout({ children }) {
+  return (
 
-
- async function layout({children}){
-
-      const session =  await getServerSession();
-
-     if(!session) redirect('/login')
-  
-        const user = session;
-        return <div className='bg-[#f4f4f4] min-h-screen  max-h-fit w-full relative'>
-        <Navbar user={user}/>
-        {children}
+     <Providers>
+       
+    <div className="bg-[#f2f2f2] min-h-screen w-full">
+      <Navbar />
+      {children}
     </div>
-}
 
-export default layout;
+      </Providers>
+  );
+}

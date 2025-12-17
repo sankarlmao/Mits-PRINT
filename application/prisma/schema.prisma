@@ -27,14 +27,14 @@ enum Orientation {
   PORTRAIT
 }
 
-enum PrintStatus {
+enum PaymentStatus {
   PENDING
   SUCCESS
   FAILED
   REFUNDED
 }
 
-enum PaymentStatus {
+enum PrintStatus  {
   PENDING
   PRINTED
   PRINTING
@@ -121,7 +121,7 @@ model Print {
   customRange String? 
 
   orderId String
-  verification Order @relation(fields: [orderId], references: [id])
+  order Order @relation(fields: [orderId], references: [id])
 
   createdAt DateTime @default(now())
   

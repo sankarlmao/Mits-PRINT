@@ -5,12 +5,14 @@ import React, { useState } from 'react'
 const FileCard = ({item, update, removeFile, index}) => {
 
 
+    
+
     const [customValueClicked,setCustomValueClicked] = useState(false)
     
   return (
    <div
      
-          className=" rounded-lg p-4 space-y-3 bg-white  min-w-[90%] h-[300px]"
+          className=" rounded-xl p-4 space-y-3 bg-white  min-w-[90%] h-fit shadow-sm"
         >
           <div className="font-medium truncate">
             {item.file.name}
@@ -21,7 +23,7 @@ const FileCard = ({item, update, removeFile, index}) => {
             {/* Copies */}
             <div className="flex items-center gap-2">
               <span>Copies</span>
-                 <select className="h-8 px-2 text-sm border rounded-md" onChange= { e=> update(index, "copies",e.target.value)}>
+                 <select className="h-8 px-2 text-sm border rounded-md" onChange= { e=> update(index, "copies",Number.parseInt(e.target.value))}>
     {[1,2,3,4,5,6,7,8,9,10].map(n => (
       <option key={n} value={n}> {n}</option>
     ))}
@@ -123,7 +125,7 @@ const FileCard = ({item, update, removeFile, index}) => {
 
           <button
             onClick={() => removeFile(index)}
-            className="text-red-500 text-xs"
+            className="text-red-500 font-light text-lg cursor-pointer" 
           >
             Remove
           </button>

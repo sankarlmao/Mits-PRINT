@@ -1,15 +1,28 @@
 "use client";
 import { useState } from "react";
 import FileCard from "./FIleCard";
+import PaymentBox from "./PaymentBox";
+import { calculateAmountServer, payMoney } from "../app/(dashboard)/action";
 
 export default function PrintLoader() {
   const [files, setFiles] = useState([]);
 
+  const [showPayBox , setShowPayBox] = useState(false);
+  const [amount , setAmount] = useState("");
 
 
-  function calculateAmount(){
 
+
+
+  async function  calculateAmount(){
+
+    // DEBUGGER
     console.log(files)
+
+    setShowPayBox(true)
+     const a =  await calculateAmountServer(files)
+      setAmount(a)
+     
   }
 
   const allowedTypes = [
@@ -25,7 +38,7 @@ export default function PrintLoader() {
       .map(file => ({
         file,
         copies: 1,
-        color: "BLACK_WHITE",      // false = B/W
+        color: "BLACK_WHITE",      
         doubleSide: false, 
         orientation:"PORTRAIT",
         pagesRange:"ALL",
@@ -34,6 +47,8 @@ export default function PrintLoader() {
 
     setFiles(prev => [...prev, ...validFiles]);
   }
+
+
 
   function update(index, key, value) {
     setFiles(prev =>
@@ -48,7 +63,10 @@ export default function PrintLoader() {
   }
 
   return (
-    <div className={`max-w-xl space-y-4  px-3   ${files.length==0?"flex justify-center items-center h-screen":""}`} >
+    <div className={`max-w-xl space-y-4  px-3 w-full  ${files.length==0?"flex justify-center items-center h-screen":""}`} >
+
+
+      <PaymentBox open={showPayBox} onClose={()=>setShowPayBox(false) } amount={amount} files={files}></PaymentBox>
 
       {/* Upload Box */}
       <label className=" rounded-lg p-5 text-center cursor-pointer ">
@@ -59,7 +77,7 @@ export default function PrintLoader() {
           className="hidden"
           onChange={handleFiles}
         />
-        <p className="text-sm text-gray-600 bg-blue-400 px-3 py-3 rounded-xl text-white">
+        <p className="text-sm  bg-blue-400 px-3 py-3 rounded-xl text-white">
           Upload PDF or DOCX files
         </p>
       </label>
@@ -77,9 +95,13 @@ export default function PrintLoader() {
       
     :""}
 
+            
+
     </div>
 
 
     
   );
 }
+
+

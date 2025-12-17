@@ -1,7 +1,6 @@
 
 "use client"
 import {signIn} from "next-auth/react"
-import { redirect } from 'next/navigation';
 import Image from 'next/image'
 import React, { useState } from 'react'
 import DotLoader from "../../components/DotLoader";
@@ -20,7 +19,8 @@ const LoginForm = () => {
     const res = await signIn("credentials", {
       email: form.email.value,
       password: form.password.value,
-      redirect: false,
+      redirect:false,
+      callbackUrl: '/',
     });
 
     if (res?.error) {
@@ -28,8 +28,10 @@ const LoginForm = () => {
       setLoad(false);
     } else {
         setLoad(false)
-      redirect('/')
+        window.location.href = res.url ?? "/";
+
     }
+
   }
 
 
@@ -40,7 +42,7 @@ const LoginForm = () => {
 
         <div className='bg-[#f4312a] w-full h-[30%] min-lg:w-[40%] min-md:h-full flex  flex-col justify-center items-center gap-5  '>
         
-        <Image src={'/college_logo.png'} alt='College Logo ' height={100} width={400} className='rounded-xl' quality={100}/>
+        <Image src="/college_logo.png" alt='College Logo ' height={100} width={400} className='rounded-xl max-md:w-[290px]' quality={100}/>
         <h1 className=' font-bold text-white text-4xl text-center font-changa min-lg:text-7xl'>MITS PRINT </h1>
 
     <p className=' px-2 text-secondary-color text-lg text-center font-bold font-'>Smart approach for printing lab outputs and project reports without crowding.</p>

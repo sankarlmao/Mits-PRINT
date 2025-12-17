@@ -1,19 +1,35 @@
-// middleware.ts
-import { withAuth } from "next-auth/middleware";
+import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
 
-export default withAuth({
-  pages: {
-    signIn: "/login",
-  },
-});
+export async function middleware(req) {
+  const { pathname } = req.nextUrl;
+
+ 
+  if (
+    pathname === "/login" ||
+    pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/_next") ||
+    pathname === "/favicon.ico" ||
+    pathname === "/college_logo.png" ||
+    pathname === "/api/file" 
+
+  ) {
+    return NextResponse.next();
+  }
+
+  const token = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+
+if (!token) {
+  return NextResponse.redirect(new URL("/login", req.url));
+}
+
+
+  return NextResponse.next();
+}     
+
 export const config = {
-  matcher: [
-    /*
-     * Protect everything except:
-     * - /login
-     * - /api/auth
-     * - static files
-     */
-    "/((?!login|api/auth|_next|favicon.ico).*)",
-  ],
+  matcher: ["/((?!_next|favicon.ico).*)"],
 };
