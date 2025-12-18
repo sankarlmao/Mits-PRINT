@@ -36,7 +36,7 @@ export default function PaymentBox({ open, onClose, amount, files }) {
             const data = await startUpload(files);
 
             if(data.success){
-              alert(data.message);
+              // alert(data.message);
             }
             else{
               alert("Something went wrong!!!!")
