@@ -54,8 +54,8 @@ export default function MyPrintsPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center py-5">
-      <div className="w-full max-w-4xl mx-auto px-4">
+    <div className=" h-screen flex flex-col items-center justify-start py-5">
+      <div className="w-full max-w-4xl mx-auto px-4 ">
         {/* Heading */}
         <div className="mb-6 flex items-center gap-3 mt-3">
           <FiPackage className="text-green-600 text-3xl" />
@@ -148,8 +148,7 @@ export default function MyPrintsPage() {
               onClick={() => {
                 setShowPopup(false);
                 getMyOrders();
-                window.location.href='/myprints'
-              }}
+                window.history.replaceState({}, "", "/myprints");              }}
               className="absolute top-2 right-2 text-gray-500 cursor-pointer"
             >
               <IoMdClose size={26} />
