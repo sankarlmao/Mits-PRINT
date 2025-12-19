@@ -7,9 +7,12 @@ export default function Layout({ children }) {
 
      <Providers>
        
-    <div className="bg-[#f2f2f2] min-h-screen w-full">
+    <div className=" min-h-screen w-full relative">
       <Navbar />
-      {children}
+      <div className="my-[90px] ">
+              {children}
+
+      </div>
     </div>
 
       </Providers>
