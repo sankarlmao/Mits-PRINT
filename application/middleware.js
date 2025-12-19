@@ -13,6 +13,8 @@ export async function middleware(req) {
     pathname === "/college_logo.png" ||
     pathname === "/api/file" 
 
+    
+
   ) {
     return NextResponse.next();
   }

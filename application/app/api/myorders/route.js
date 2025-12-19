@@ -20,14 +20,6 @@ export async function GET(req) {
 
     }
 
-    const myOrders = await getMyOrders(orderId)
-
-        if(!myOrders){
-            return NextResponse.json({success:false})
-        }
-
-        return NextResponse.json({success:true, data:myOrders})
-
-   
+    return NextResponse.json({success:false})
     
 }

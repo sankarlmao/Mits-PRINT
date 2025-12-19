@@ -8,51 +8,45 @@ import { FiPackage, FiClock, FiShield } from "react-icons/fi";
 import { MdOutlineVerified, MdPendingActions } from "react-icons/md";
 import { formatDate } from "../utils/dateFormater";
 
-export default function MyPrintsPage() {
+export default function MyPrintsPage({data}) {
   const [showPopup, setShowPopup] = useState(false);
   const [allOrders, setAllOrders] = useState([]);
   const [currentOrder, setCurrentOrder] = useState();
+  const [handledOrderId, setHandledOrderId] = useState(null);
 
   const searchParams = useSearchParams();
   const order_id = searchParams.get("order_id");
 
-  useEffect(() => {
-    getMyOrders();
 
-    if (order_id) {
+    useEffect(() => {
+      setAllOrders(data)
+      if (!order_id) return;
+      if (handledOrderId === order_id) return;
+
+      setHandledOrderId(order_id);
       showOrderPlacedMessage(order_id);
-    } else {
-      getMyOrders()
-    }
-  }, [order_id]);
+      
+    }, [order_id, handledOrderId]);
 
   const showOrderPlacedMessage = async (orderId) => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/myorders?order_id=${orderId}`,
-      {
-        method: "GET",
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/myorders?order_id=${orderId}`,
+        {
+          method: "GET",
+        }
+      );
+  
+      const mes = await res.json();
+      console.log(mes)
+      if (mes.success) {
+        setCurrentOrder(mes.data);
+        setShowPopup(true);
       }
-    );
+    }; 
+  
 
-    const mes = await res.json();
 
-    if (mes.success) {
-      setCurrentOrder(mes.data);
-      setShowPopup(true);
-    }
-  };
 
-  const getMyOrders = async () => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/myorders`,
-      {
-        method: "GET",
-      }
-    );
-
-    const orders = await res.json();
-    setAllOrders(orders?.data.orders || []);
-  };
 
   return (
     <div className=" h-screen flex flex-col items-center justify-start py-5">
@@ -148,7 +142,8 @@ export default function MyPrintsPage() {
             <button
               onClick={() => {
                 setShowPopup(false);
-                getMyOrders();
+                setCurrentOrder(null)
+                
                 window.history.replaceState({}, "", "/myprints");              }}
               className="absolute top-2 right-2 text-gray-500 cursor-pointer"
             >

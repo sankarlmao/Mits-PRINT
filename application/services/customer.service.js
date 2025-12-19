@@ -32,7 +32,7 @@ export async function getMyOrder(orderId){
 }
 
 
-export async function getMyOrders(){
+export async function getOrdersFromServer(){
 
 
     const session = await getServerSession(authOptions)
