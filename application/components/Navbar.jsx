@@ -19,7 +19,7 @@ const Navbar = () => {
 
 
 
-      <span className="text-primary-color font-sans text-xl font-bold flex gap-2 justify-center items-center ">
+      <span className="text-primary-color font-sans text-xl font-extrabold  justify-center items-center pl-1 ">
      MITS PRINT
       </span>
 
@@ -53,7 +53,7 @@ const Navbar = () => {
         {navItems.map(({label,url,icon:Icon})=>(
 
           <li key={label} >
-            <Link href={url} className="flex gap-1 justify-center items-center text-gray-800 font-semibold">
+            <Link href={url} className="flex gap-1 justify-center items-center text-gray-800 ">
             <Icon size={23} className="text-green-500"/>
             {label}
             </Link>
