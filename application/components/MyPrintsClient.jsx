@@ -37,7 +37,6 @@ export default function MyPrintsPage({data}) {
       );
   
       const mes = await res.json();
-      console.log(mes)
       if (mes.success) {
         setCurrentOrder(mes.data);
         setShowPopup(true);
