@@ -11,7 +11,6 @@ export async function GET(req) {
 
         const myOrder = await getMyOrder(orderId)
 
-        console.log(myOrder)
         if(!myOrder){
             return NextResponse.json({success:false})
         }
