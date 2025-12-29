@@ -1,13 +1,16 @@
 "use client";
-
-import { startUpload } from "../app/(dashboard)/action";
+import axios from 'axios'
+import { getSignedUploadUrls, startUploadMetaData } from "../app/(dashboard)/action";
 import { useState } from "react";
 import { FaIndianRupeeSign } from "react-icons/fa6";
+import UploadProgressBar from "./UploadProgressBar";
 
 
 export default function PaymentBox({ open, onClose, amount, files }) {
   const [loading, setLoading] = useState(false);
-
+  const [currentFileIndex, setCurrentFileIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [allUploaded, setAllUploaded] = useState(false);
   if (!open) return null;
 
     const loadRazorpay = async () => {
@@ -33,18 +36,32 @@ export default function PaymentBox({ open, onClose, amount, files }) {
 
             //show screen
               setLoading(true);
-            const data = await startUpload(files);
+              const uploads = await  getSignedUploadUrls(files)
+              console.log(uploads)
+              for (let i = 0; i < files.length; i++) {
+                setCurrentFileIndex(i);
+                setProgress(0);
 
+                await axios.put(uploads[i].uploadUrl, files[i].file, {
+                  headers: { "Content-Type": files[i].file.type },
+                  onUploadProgress: (e) => {
+                    setProgress(Math.round((e.loaded * 100) / e.total));
+                  },
+                });
+              }
+
+              setAllUploaded(true);
+              const data = await startUploadMetaData(files,uploads)
             if(data.success){
-              // alert(data.message);
+                  setLoading(false)
+                  onClose()
+                  window.location.href=`/myprints?order_id=${data.orderId}`
+          
             }
             else{
               alert("Something went wrong!!!!")
             }
-            setLoading(false)
-            console.log(data);
-            window.location.href=`/myprints?order_id=${data.orderId}`
-    
+           
             } 
             else {
               alert("Payment verification failed");
@@ -59,14 +76,13 @@ export default function PaymentBox({ open, onClose, amount, files }) {
 
     const handlePay = async () => {
 
-        
-  
       loadRazorpay()
-  
-
+      
 
 
   }
+
+
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center">
@@ -79,15 +95,12 @@ export default function PaymentBox({ open, onClose, amount, files }) {
 
         {/* Loading state */}
         {loading ? (
-          <div className="flex h-[220px] flex-col items-center justify-center">
-            <span className="text-lg font-medium text-gray-700">
-               Sending this file to MITS STORE PC Please wait .....
-            </span>
-            <span className="mt-2 text-sm text-gray-400">
-              Please do not close this window
-            </span>
-          </div>
-        ) : (
+            <UploadProgressBar
+              file={files[currentFileIndex]?.file}
+              progress={progress}
+              allUploaded={allUploaded}
+            />
+                    ) : (
           <>
             {/* Amount */}
             <div className="flex items-center justify-center gap-1 py-6 text-4xl font-semibold text-gray-900">
@@ -102,7 +115,7 @@ export default function PaymentBox({ open, onClose, amount, files }) {
                 className="h-11 rounded-xl bg-green-600 text-lg font-medium text-white
                            hover:bg-green-700 transition"
               >
-                Pay Now
+                Procced
               </button>
 
               <button

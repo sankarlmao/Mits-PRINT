@@ -46,7 +46,8 @@ const FileCard = ({item, update, removeFile, index}) => {
             </label>
 
             {/* Double Side */}
-            <label className="flex items-center gap-1">
+           {item.color=="BLACK_WHITE"?
+           <label className="flex items-center gap-1">
               <input
                 className='h-5 w-6'
                 type="checkbox"
@@ -56,7 +57,8 @@ const FileCard = ({item, update, removeFile, index}) => {
                 }
               />
               Both sides
-            </label>
+            </label>:"" 
+          }
 
 
              {/* Orientation */}

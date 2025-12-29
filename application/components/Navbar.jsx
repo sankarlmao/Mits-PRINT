@@ -1,17 +1,32 @@
 "use client";
-
-import { useSession } from "next-auth/react";
+import { RiLogoutCircleLine } from "react-icons/ri";
+import { navItems } from "../constants/navItem";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import { CiMenuBurger } from "react-icons/ci";
-
+import { TfiClose } from "react-icons/tfi";
 const Navbar = () => {
   const { data: session, status } = useSession();
   
   return (
-    <div className="w-full bg-white h-[70px] flex justify-between items-center px-3 shadow-sm shadow-[#a8a8a8] min-lg:px-[200px]">
+    <div className="w-full bg-white h-[90px]  px-3 shadow-sm shadow-[#a8a8a8] min-lg:px-[200px] fixed top-0  flex flex-col justify-center">
 
-      <span className="text-primary-color font-sans text-xl font-bold">
-        MITS PRINT
+    <div className="flex justify-between items-center">
+
+
+
+
+
+
+
+      <span className="text-primary-color font-sans text-xl font-extrabold  justify-center items-center pl-1 ">
+     MITS PRINT
       </span>
+
+    
+
+       
+
 
       {status === "loading" ? null : session?.user ? (
         <div className="flex gap-3 items-center">
@@ -25,6 +40,38 @@ const Navbar = () => {
           </div>
         </div>
       ) : null}
+
+
+
+    </div>
+
+
+    <div className="w-full  h-[30px] flex justify-between items-center">
+
+      <ul className="flex gap-3">
+
+        {navItems.map(({label,url,icon:Icon})=>(
+
+          <li key={label} >
+            <Link href={url} className="flex gap-1 justify-center items-center text-gray-800 ">
+            <Icon size={23} className="text-green-500"/>
+            {label}
+            </Link>
+          </li>
+        )
+        )}
+
+
+
+      </ul>
+
+      <button onClick={()=>signOut()} className="flex justify-center items-center gap-1 cursor-pointer  rounded-2xl text-gray-700">
+       <RiLogoutCircleLine className="text-red-400" /> Logout
+      </button>
+
+
+
+    </div>
     </div>
   );
 };

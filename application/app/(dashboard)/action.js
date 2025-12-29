@@ -75,17 +75,16 @@ export async function calculateAmountServer(files){
 
 
 
-export  async function startUpload(files) {
+export  async function startUploadMetaData(files,uploads) {
 
 
     const dataWithOutFILE = files.map(({ file, ...rest }) => rest);
 
-    const filesOnly = files.map(file=>file.file)
-    const uploadUrls = await uploadToGCS(filesOnly);
-  
+    const fileUrls = uploads.map(u=>u.fileUrl)
+    
     const metadata = dataWithOutFILE.map((item,index)=>({
         ...item,
-        fileUrl:uploadUrls[index]
+        fileUrl:fileUrls[index]
     }))
 
     const formData = new FormData();
@@ -109,8 +108,11 @@ export  async function startUpload(files) {
 
 
 
-export async function uploadToGCS(files){
+export async function getSignedUploadUrls(fils){
 
+
+
+const files = fils.map(file=>file.file)
 console.log(files)
 const formData = new FormData();
 
@@ -121,7 +123,6 @@ files.forEach(file => {
 });
 
 
-console.log('Hi', formData.getAll('files'))
 
      const res = await fetch('/api/uploader', {
     method: 'POST',
@@ -131,16 +132,5 @@ console.log('Hi', formData.getAll('files'))
 
     const { uploads } = await res.json();
 
-  // 2️⃣ Upload files directly to GCS
-    await Promise.all(
-        uploads.map((u, i) =>
-        fetch(u.uploadUrl, {
-            method: "PUT",
-            headers: { "Content-Type": files[i].type },
-            body: files[i],
-        })
-        )
-    );
-
-  return uploads.map(u => u.fileUrl);
+    return uploads;
     }

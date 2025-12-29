@@ -185,3 +185,19 @@ model Payment {
 
 
 
+enum PrinterStatus {
+  OFF
+  READY
+  OUT_OF_PAPER
+  ERROR
+}
+
+
+model Printer{
+  id String @id @unique
+  name String 
+  status PrinterStatus @default(READY)
+  reason String?
+  type ColorMode 
+  updatedAt DateTime @updatedAt
+}
