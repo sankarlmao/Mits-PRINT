@@ -78,8 +78,8 @@ export default function MyPrintsPage({data}) {
                     {order.id}
                   </p>
 
-                  <p className="text-xs text-gray-400 flex items-center gap-2">
-                    <FiClock />
+                  <p className="text-sm text-gray-400 flex items-center gap-2">
+                    <span className="font-semibold">Ordered</span> : 
                     {formatDate(order.createdAt) }
                   </p>
                 </div>

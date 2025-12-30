@@ -2,11 +2,13 @@ export async function formatDate(dateInput) {
   const date = new Date(dateInput);
 
   return date.toLocaleString("en-IN", {
+    weekday:"long",
     day: "2-digit",
-    month: "long",
+    month: "short",
     year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
+    hour: "2-digit",
+    minute: "numeric",
+    
     hour12: true,
   });
 }

@@ -2,13 +2,13 @@ export const SIMPLE_STATUS = {
   READY: {
     color: "bg-green-500",
     text: "text-green-600",
-    label: "Ready",
+    label: "Online",
     percent: 100,
   },
   OFF: {
     color: "bg-red-500",
     text: "text-red-600",
-    label: "Off",
+    label: "Offline",
     percent: 0,
   },
   OUT_OF_PAPER: {
