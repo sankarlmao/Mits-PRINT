@@ -1,12 +1,13 @@
 "use client";
 import { IoMdCheckmarkCircleOutline, IoMdClose } from "react-icons/io";
 import { useEffect, useState } from "react";
-import { FaGoodreads } from "react-icons/fa6";
+import {  FaThumbsUp } from "react-icons/fa6";
 import { useSearchParams } from "next/navigation";
 
 import { FiPackage, FiClock, FiShield } from "react-icons/fi";
 import { MdOutlineVerified, MdPendingActions } from "react-icons/md";
 import { formatDate } from "../utils/dateFormater";
+import { RiPrinterCloudFill } from "react-icons/ri";
 
 export default function MyPrintsPage({data}) {
   const [showPopup, setShowPopup] = useState(false);
@@ -85,10 +86,32 @@ export default function MyPrintsPage({data}) {
 
                 {/* Status */}
                 <div className="flex items-center gap-3">
-                  <MdPendingActions className="text-yellow-500 text-xl" />
+                 {order.status==="PENDING" && (
+                  <div className="flex gap-2 justify-center items-center">
+                     <MdPendingActions className="text-yellow-500 text-xl" />
                   <span className="px-4 py-1.5 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">
                     PENDING
                   </span>
+                  </div>
+                 )}
+
+                  {order.status==="PRINTING" && (
+                  <div className="flex gap-2 justify-center items-center">
+                     <RiPrinterCloudFill className="text-cyan-400 text-xl" />
+                  <span className="px-4 py-1.5 text-xs font-semibold rounded-full bg-cyan-100 text-cyan-700">
+                    PRINTING
+                  </span>
+                  </div>
+                 )}
+
+                    {order.status==="PRINTED" && (
+                  <div className="flex gap-2 justify-center items-center">
+                     <FaThumbsUp className="text-green-400 text-xl" />
+                  <span className="px-4 py-1.5 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                    PRINTED
+                  </span>
+                  </div>
+                 )}
                 </div>
 
                 {/* OTP */}
