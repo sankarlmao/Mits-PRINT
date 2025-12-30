@@ -12,7 +12,7 @@ export async function middleware(req) {
     pathname === "/favicon.ico" ||
     pathname === "/college_logo.png" ||
     pathname === "/api/file" ||
-    pathname === "/api/printer" 
+    pathname === "/api/printer/status" 
 
   ) {
     return NextResponse.next();

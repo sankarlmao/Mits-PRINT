@@ -1,10 +1,34 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FileCard from "./FIleCard";
 import PaymentBox from "./PaymentBox";
 import { calculateAmountServer, payMoney } from "../app/(dashboard)/action";
-
+import { STATUS_CONFIG } from "../constants/status";
+import PrinterStatus from "./PrinterStatusBar";
 export default function PrintLoader() {
+  const [BW_PRINTER_STATUS, setBW_PRINTER_STATUS] = useState('READY');
+  const [printer, setPrinter] = useState();
+
+useEffect(() => {
+  const fetchPrinterStatus = async () => {
+    try {
+      const res = await fetch("/api/printer/condition?type=BW_1");
+      const data = await res.json();
+
+      if (data.success) {
+        const { printer } = data;
+        setPrinter(printer);
+
+        // better: store the actual status
+        setBW_PRINTER_STATUS(printer.status);
+      }
+    } catch (error) {
+      console.error("Failed to fetch printer status", error);
+    }
+  };
+
+  fetchPrinterStatus();
+}, []);
   const [files, setFiles] = useState([]);
 
   const [showPayBox , setShowPayBox] = useState(false);
@@ -72,6 +96,8 @@ async function calculateAmount() {
 
     {/* EMPTY STATE */}
     {files.length === 0 && (
+
+      
       <div className="flex flex-col items-center justify-center h-[70vh] text-center space-y-4">
         <h2 className="text-lg font-semibold">Start Printing</h2>
 
@@ -125,10 +151,15 @@ async function calculateAmount() {
             + Add more files
           </div>
         </label>
-        <button
+
+    {/* status of printer  */}
+         <PrinterStatus printer={printer}/>
+
+
+    {BW_PRINTER_STATUS=='READY'&&<button
           disabled={isCalculating}
           onClick={calculateAmount}
-          className={`w-full py-3 rounded-2xl text-white font-bold transition ${
+          className={`w-full py-3 rounded-2xl text-white font-bold transition cursor-pointer ${
             isCalculating
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-green-500 hover:bg-green-600"
@@ -136,6 +167,7 @@ async function calculateAmount() {
         >
           {isCalculating ? "Calculating..." : "Calculate Amount"}
         </button>
+      }
       </div>
     )}
   </div>

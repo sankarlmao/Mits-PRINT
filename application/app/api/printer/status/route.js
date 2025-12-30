@@ -1,4 +1,4 @@
-import { updatePrinterStatus } from "../../../services/printer.service";
+import { updatePrinterStatus } from "../../../../services/printer.service";
 import { NextResponse } from "next/server";
 
 export async function POST(req){
@@ -30,3 +30,4 @@ export async function POST(req){
 
     }
 }
+
