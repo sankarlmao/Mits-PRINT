@@ -7,11 +7,24 @@ from collections import deque
 API_URL = "https://mitsprint.vercel.app/api/file?SECRET_KEY=mitsprint123456789"
 CHECK_INTERVAL = 5  # seconds
 
+# ---------------- PRINTER STATUS CONFIG ----------------
+
+STATUS_POST_URL = "https://xyz.com/status"
+PRINTER_SECRET_KEY = "mitsprint123456789"
+XEROX_PRINTER_ID = "XEROX_01"
+XEROX_PRINTER_NAME = "Xerox"
+
+# ---------------- FILE UPDATE CONFIG ------------------
+
+FILE_UPDATE_URL = "https://mitsprint.vercel.app/api/file/update"
+
+# ------------------------------------------------------
+
 BASE_DIR = Path("PRINT")
 COLOR_DIR = BASE_DIR / "COLOR"
 BW_DIR = BASE_DIR / "BLACK_WHITE"
 
-TEST_MODE_HOLD_QUEUE = True  # keep jobs visible in lpq
+TEST_MODE_HOLD_QUEUE = True
 
 COLOR_DIR.mkdir(parents=True, exist_ok=True)
 BW_DIR.mkdir(parents=True, exist_ok=True)
@@ -52,7 +65,6 @@ def enqueue_jobs(orders):
             copies = int(p.get("copies", 1))
             status = p.get("status")
 
-            # 🔴 IMPORTANT: only pending jobs
             if status != "PENDING":
                 continue
 
@@ -80,15 +92,36 @@ def enqueue_jobs(orders):
         print("[i] No new printable jobs found")
 
 
-# ---------------- PRINT ----------------
+# ---------------- FILE DOWNLOAD + UPDATE ----------------
 
-def download_pdf(url, path):
+def notify_file_downloaded(order_id):
+    payload = {
+        "secret_key": PRINTER_SECRET_KEY,
+        "orderid": order_id,
+        "status": "DOWNLOADED"
+    }
+
+    try:
+        r = requests.post(FILE_UPDATE_URL, json=payload, timeout=10)
+        r.raise_for_status()
+        print(f"[✓] Server updated: {order_id} DOWNLOADED")
+
+    except Exception as e:
+        print("[ERROR] File update POST failed:", e)
+
+
+def download_pdf(url, path, order_id):
     if path.exists():
         return
+
     r = requests.get(url, timeout=30)
     r.raise_for_status()
     path.write_bytes(r.content)
 
+    notify_file_downloaded(order_id)
+
+
+# ---------------- PRINT ----------------
 
 def print_job(job):
     print(f"[-] Printing {job['id']} | copies={job['copies']}")
@@ -109,8 +142,53 @@ def process_queue():
         return
 
     job = print_queue.popleft()
-    download_pdf(job["url"], job["path"])
+    download_pdf(job["url"], job["path"], job["id"])
     print_job(job)
+
+
+# ---------------- PRINTER STATUS ----------------
+
+def get_xerox_printer_status():
+    try:
+        result = subprocess.run(
+            ["lpstat", "-p", XEROX_PRINTER_NAME],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+
+        output = result.stdout.lower()
+
+        if "printing" in output:
+            return "PRINTING", "Printer is actively printing"
+        if "idle" in output:
+            return "IDLE", "Printer is idle and ready"
+        if "disabled" in output or "stopped" in output:
+            return "STOPPED", "Printer is disabled or stopped"
+
+        return "UNKNOWN", "Unable to determine printer state"
+
+    except subprocess.CalledProcessError:
+        return "OFFLINE", "Printer not reachable via CUPS"
+
+
+def post_printer_status():
+    printer_status, printer_reason = get_xerox_printer_status()
+
+    payload = {
+        "secret_key": PRINTER_SECRET_KEY,
+        "printer_id": XEROX_PRINTER_ID,
+        "printer_status": printer_status,
+        "printer_reason": printer_reason
+    }
+
+    try:
+        r = requests.post(STATUS_POST_URL, json=payload, timeout=10)
+        r.raise_for_status()
+        print("[✓] Printer status sent")
+
+    except Exception as e:
+        print("[ERROR] Printer status POST failed:", e)
 
 
 # ---------------- MAIN ----------------
@@ -124,13 +202,12 @@ def main():
         try:
             print("[*] Fetching orders from server...")
             response = fetch_raw_response()
-            print("[DEBUG] Raw response keys:", response.keys() if isinstance(response, dict) else "list")
 
             orders = extract_orders(response)
-            print(f"[DEBUG] Orders received: {len(orders)}")
-
             enqueue_jobs(orders)
+
             process_queue()
+            post_printer_status()
 
             time.sleep(CHECK_INTERVAL)
 
