@@ -5,8 +5,10 @@ import PaymentBox from "./PaymentBox";
 import { calculateAmountServer, payMoney } from "../app/(dashboard)/action";
 import { STATUS_CONFIG } from "../constants/status";
 import PrinterStatus from "./PrinterStatusBar";
+import GreenSpinner from "./PriceLoadingAnimation";
 export default function PrintLoader() {
   const [BW_PRINTER_STATUS, setBW_PRINTER_STATUS] = useState('READY');
+
   const [printer, setPrinter] = useState();
 
 useEffect(() => {
@@ -38,12 +40,13 @@ useEffect(() => {
 
 async function calculateAmount() {
   setIsCalculating(true);
-  setShowPayBox(true);
 
   const a = await calculateAmountServer(files);
   setAmount(a);
 
   setIsCalculating(false);
+  setShowPayBox(true);
+
 }
 
 
@@ -87,6 +90,7 @@ async function calculateAmount() {
  return (
   <div className="max-w-xl px-3 w-full mx-auto">
 
+    
     <PaymentBox
       open={showPayBox}
       onClose={() => setShowPayBox(false)}
@@ -159,13 +163,14 @@ async function calculateAmount() {
     {BW_PRINTER_STATUS=='READY'&&<button
           disabled={isCalculating}
           onClick={calculateAmount}
-          className={`w-full py-3 rounded-2xl text-white font-bold transition cursor-pointer ${
+          className={`w-full py-3 rounded-2xl text-white font-bold transition flex justify-center items-center ${
             isCalculating
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-green-500 hover:bg-green-600"
+              ? " bg-green-400 cursor-not-allowed"
+              : " bg-green-600 hover:bg-green-600 cursor-pointer "
           }`}
         >
-          {isCalculating ? "Calculating..." : "Calculate Amount"}
+          {isCalculating ? <div className="flex justify-center items-center gap-3 ">Calculating.. <GreenSpinner size={24}/></div> : "Calculate Amount"}
+         
         </button>
       }
       </div>

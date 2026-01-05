@@ -1,16 +1,23 @@
 "use client";
 import axios from 'axios'
 import { getSignedUploadUrls, startUploadMetaData } from "../app/(dashboard)/action";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import UploadProgressBar from "./UploadProgressBar";
+import GreenSpinner from './PriceLoadingAnimation';
 
 
 export default function PaymentBox({ open, onClose, amount, files }) {
   const [loading, setLoading] = useState(false);
+  const [razorpayLoading, setRazorpayLoading] = useState(false);
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [allUploaded, setAllUploaded] = useState(false);
+
+
+  useEffect(()=>{
+ 
+  })
   if (!open) return null;
 
     const loadRazorpay = async () => {
@@ -76,8 +83,9 @@ export default function PaymentBox({ open, onClose, amount, files }) {
 
     const handlePay = async () => {
 
+      setRazorpayLoading(true);
       loadRazorpay()
-      
+      setRazorpayLoading(false)
 
 
   }
@@ -103,19 +111,28 @@ export default function PaymentBox({ open, onClose, amount, files }) {
                     ) : (
           <>
             {/* Amount */}
-            <div className="flex items-center justify-center gap-1 py-6 text-4xl font-semibold text-gray-900">
+              <div className="flex items-center justify-center gap-1 py-6 text-4xl font-semibold text-gray-900">
+           
+
+        
               <FaIndianRupeeSign className="text-3xl" />
               {(Number.parseFloat(amount+.00)/100).toFixed(2)}
-            </div>
+
+              </div>
+             
+
+
+            
 
             {/* Buttons */}
             <div className="flex flex-col gap-3">
               <button
                 onClick={handlePay}
-                className="h-11 rounded-xl bg-green-600 text-lg font-medium text-white
-                           hover:bg-green-700 transition"
+                disabled={razorpayLoading}
+                className={`h-11 rounded-xl  text-lg font-medium text-white  transition cursor-pointer ${razorpayLoading?"bg-gray-400":"bg-green-500"}
+                           `}
               >
-                Procced
+                {razorpayLoading?<div className='flex justify-center items-center gap-3'><GreenSpinner size={26}/></div>:"Procced to Pay"}
               </button>
 
               <button
