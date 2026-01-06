@@ -19,3 +19,16 @@ export async function updatePrinterStatus(data) {
 
     return true
 }
+
+
+
+export async function getPrinterStatus(printerId){
+
+    const printer = await prisma.printer.findUnique({
+        where:{id:printerId}
+    });
+
+
+    console.log(printer)
+    return printer;
+}

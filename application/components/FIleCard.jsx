@@ -40,7 +40,7 @@ const FileCard = ({item, update, removeFile, index}) => {
                 }
               >
                 <option value="BLACK_WHITE">B&W</option>
-                <option value='COLOR'>Color</option>
+                {/* <option value='COLOR'>Color</option> */}
               </select>
             
             </label>

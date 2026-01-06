@@ -45,17 +45,10 @@ export async function getOrderfromDB(){
 
 const orders = await prisma.order.findMany({
   where: {
-    prints: {
-      some: {
         status: "PENDING",
-      },
     },
-  },
   include: {
     prints: {
-      where: {
-        status: "PENDING",
-      },
     },
     student:{
         select:{
@@ -69,9 +62,9 @@ const orders = await prisma.order.findMany({
 //after recieving there orders i have to put the status 
 
 
-await prisma.print.updateMany({
+await prisma.order.updateMany({
   where: {
-    orderId: { in: orders.map(o => o.id) },
+    id: { in: orders.map(o => o.id) },
     status: "PENDING",
   },
   data: {
@@ -85,4 +78,28 @@ return orders;
 
 
 
+}
+
+
+export async function updateOrderStatus(data){
+
+  const {orderId , orderStatus} = data;
+
+  const orders = await prisma.order.update({
+    where:{id:orderId},
+    data:{
+      status:orderStatus
+    },
+    include:{
+        prints:{
+          select:{
+            fileUrl:true
+          }
+        }
+    }
+  });
+
+  const {prints} = orders;
+  if(orders) return prints;
+  return [];
 }

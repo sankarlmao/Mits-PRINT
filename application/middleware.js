@@ -12,7 +12,8 @@ export async function middleware(req) {
     pathname === "/favicon.ico" ||
     pathname === "/college_logo.png" ||
     pathname === "/api/file" ||
-    pathname === "/api/printer" 
+    pathname === "/api/printer/status" ||
+    pathname === "/api/file/update" 
 
   ) {
     return NextResponse.next();

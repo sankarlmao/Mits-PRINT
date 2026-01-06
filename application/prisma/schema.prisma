@@ -36,8 +36,8 @@ enum PaymentStatus {
 
 enum PrintStatus  {
   PENDING
-  PRINTED
   PRINTING
+  PRINTED
 }
 
 enum PrintRange {
@@ -115,7 +115,6 @@ model Print {
   colorMode ColorMode
   orientation Orientation @default(PORTRAIT)
   printOnBothSides Boolean @default(false)
-  status PrintStatus @default(PENDING)
 
   pageRange PrintRange @default(ALL)
   customRange String? 
@@ -137,7 +136,7 @@ model Order {
 
   id String @id @default(cuid())
   otpCode String
-  
+  status PrintStatus @default(PENDING)
   studentId String
   student Student @relation(fields: [studentId],references: [id])
 

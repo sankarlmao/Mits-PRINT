@@ -50,13 +50,7 @@ export async function getOrdersFromServer(){
         id: true,
         otpCode: true,
         createdAt: true,
-
-    
-      prints: {
-        select:{
-            status:true
-        }
-      },
+        status:true,
         },
       orderBy: {
         createdAt: "desc", // latest first

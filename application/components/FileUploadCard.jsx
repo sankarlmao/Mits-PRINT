@@ -1,10 +1,36 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FileCard from "./FIleCard";
 import PaymentBox from "./PaymentBox";
 import { calculateAmountServer, payMoney } from "../app/(dashboard)/action";
-
+import { STATUS_CONFIG } from "../constants/status";
+import PrinterStatus from "./PrinterStatusBar";
+import GreenSpinner from "./PriceLoadingAnimation";
 export default function PrintLoader() {
+  const [BW_PRINTER_STATUS, setBW_PRINTER_STATUS] = useState('READY');
+
+  const [printer, setPrinter] = useState();
+
+useEffect(() => {
+  const fetchPrinterStatus = async () => {
+    try {
+      const res = await fetch("/api/printer/condition?type=BW_1");
+      const data = await res.json();
+
+      if (data.success) {
+        const { printer } = data;
+        setPrinter(printer);
+
+        // better: store the actual status
+        setBW_PRINTER_STATUS(printer.status);
+      }
+    } catch (error) {
+      console.error("Failed to fetch printer status", error);
+    }
+  };
+
+  fetchPrinterStatus();
+}, []);
   const [files, setFiles] = useState([]);
 
   const [showPayBox , setShowPayBox] = useState(false);
@@ -14,12 +40,13 @@ export default function PrintLoader() {
 
 async function calculateAmount() {
   setIsCalculating(true);
-  setShowPayBox(true);
 
   const a = await calculateAmountServer(files);
   setAmount(a);
 
   setIsCalculating(false);
+  setShowPayBox(true);
+
 }
 
 
@@ -63,6 +90,7 @@ async function calculateAmount() {
  return (
   <div className="max-w-xl px-3 w-full mx-auto">
 
+    
     <PaymentBox
       open={showPayBox}
       onClose={() => setShowPayBox(false)}
@@ -72,6 +100,8 @@ async function calculateAmount() {
 
     {/* EMPTY STATE */}
     {files.length === 0 && (
+
+      
       <div className="flex flex-col items-center justify-center h-[70vh] text-center space-y-4">
         <h2 className="text-lg font-semibold">Start Printing</h2>
 
@@ -125,17 +155,24 @@ async function calculateAmount() {
             + Add more files
           </div>
         </label>
-        <button
+
+    {/* status of printer  */}
+         <PrinterStatus printer={printer}/>
+
+
+    {BW_PRINTER_STATUS=='READY'&&<button
           disabled={isCalculating}
           onClick={calculateAmount}
-          className={`w-full py-3 rounded-2xl text-white font-bold transition ${
+          className={`w-full py-3 rounded-2xl text-white font-bold transition flex justify-center items-center ${
             isCalculating
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-green-500 hover:bg-green-600"
+              ? " bg-green-400 cursor-not-allowed"
+              : " bg-green-600 hover:bg-green-600 cursor-pointer "
           }`}
         >
-          {isCalculating ? "Calculating..." : "Calculate Amount"}
+          {isCalculating ? <div className="flex justify-center items-center gap-3 ">Calculating.. <GreenSpinner size={24}/></div> : "Calculate Amount"}
+         
         </button>
+      }
       </div>
     )}
   </div>
