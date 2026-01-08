@@ -70,7 +70,7 @@ const LoginForm = () => {
 
                 <div className='flex items-center justify-end w-full px-6 '>
 
-                <p className="text-blue-400 font-serif cursor-pointer hover:text-blue-300" onClick={()=>window.location.href="/reset-password"}>Forgot password ?</p>
+                {/* <p className="text-blue-400 font-serif cursor-pointer hover:text-blue-300" onClick={()=>window.location.href="/reset-password"}>Forgot password ?</p> */}
 
                 </div>
                 <p className="py-1 px-8 text-red-500 font-medium text-left h-[30px]">{"  "} {error}</p>
