@@ -1,82 +1,105 @@
-<img width="1024" height="1024" alt="flow-diagram" src="https://github.com/user-attachments/assets/e1e8cc73-4e42-4b27-9f18-ac25d932282b" />
 
-
-   <img width="2816" height="1536" alt="printing" src="https://github.com/user-attachments/assets/30023353-a27a-4310-aa10-e4b27fdb5d50" />
-
-
-
-# Auto-Print & Delete Automation
-
-This project automates the process of printing PDF files. It monitors a specific folder (e.g., "print"); whenever a PDF is detected, it automatically sends it to the default printer and deletes the file afterward.
-
-## Features
-- **Auto-detection:** Watch a specific folder for new `.pdf` files.
-- **Auto-printing:** Sends files to the Windows Default Printer immediately.
-- **Auto-cleanup:** Deletes the file after the print job is spooled to prevent duplicate prints.
+# MITS PRINT
+Automated Campus Printing System  
+Developer Documentation
 
 ---
 
-## Prerequisites
+## 1. Project Overview
 
-Before running the scripts, ensure the following:
+MITS PRINT is an automated campus printing platform designed to eliminate long queues and manual print handling in the MITS store during lab record submissions and semester endings.
 
-1.  **Default Printer:** Make sure your physical printer is set as the **Default Printer** in Windows Settings.
-    * *Settings > Bluetooth & devices > Printers & scanners > Select your printer > Set as default.*
-    * *Warning:* If "Microsoft Print to PDF" is default, the script will get stuck asking where to save files.
-2.  **PDF Reader:** Ensure you have a PDF reader installed (Adobe Reader, SumatraPDF, Edge, etc.).
+Students upload documents, pay online, and receive printed output automatically without interacting with printer. Print jobs are queued, stored, processed, and printed by a dedicated printer PC running a background Python service.
 
 ---
 
-## Method 1: Python (Recommended)
+## 2. System Architecture
 
-This method is more robust and offers better control over file handling.
 
-### 1. Installation
-1.  Install [Python](https://www.python.org/downloads/) if you haven't already.
-2.  Open your Command Prompt or Terminal and install the required Windows extensions:
-    ```bash
-    pip install pywin32
-    ```
 
-### 2. Configuration
-1.  Create a file named `autoprint.py`.
-2.  Paste the code below into the file.
-3.  **Important:** Edit the `path_to_watch` variable in the code to match your specific folder path.
+![System Architecture](docs/images/flow.png)
+![System Architecture](docs/images/flow-w.png)
+The system is composed of five major components:
 
-```python
-import os
-import time
-import win32api
-import win32print
+1. **Next.js Web Application**
+2. **Backend API (Next.js API Routes)**
+3. **PostgreSQL Database (Prisma ORM)**
+4. **Google Cloud Storage (GCS)**
+5. **Store Printer PC (Python Print Agent)**
 
-# --- CONFIGURATION ---
-# Use 'r' before the string to handle backslashes
-path_to_watch = r"C:\Users\YourName\Desktop\print" 
-# ---------------------
 
-print(f"Monitoring {path_to_watch} for PDFs...")
 
-while True:
-    try:
-        files = os.listdir(path_to_watch)
-        for filename in files:
-            if filename.lower().endswith(".pdf"):
-                full_path = os.path.join(path_to_watch, filename)
-                print(f"Printing: {filename}")
-                
-                # Print using default printer
-                win32api.ShellExecute(0, "print", full_path, None, ".", 0)
-                
-                # Wait for spooling (adjust if printing large files)
-                time.sleep(10) 
-                
-                # Delete file
-                os.remove(full_path)
-                print(f"Deleted: {filename}")
-                
-        time.sleep(5)
-    except Exception as e:
-        print(f"Error: {e}")
-        time.sleep(5)
+---
+
+## 3. Authentication & Security
+
+Authentication is handled using:
+
+- NextAuth
+- JWT tokens
+- bcrypt password hashing
+
+Only users with a valid college email (`@mgits.ac.in`) can register and log in.
+
+Authentication Flow:
+1. User logs in using college email
+2. JWT is issued
+3. Token is used for all order and payment requests
+
+---
+
+## 4. Print Order Lifecycle
+
+1. Student logs in
+2. Uploads PDF files
+3. Selects print settings
+4. Makes payment via Razorpay
+5. Files are uploaded to Google Cloud Storage
+6. File URLs are stored in the database
+7. Order status becomes `PENDING`
+8. Printer PC fetches orders every 10 seconds
+9. Print jobs are downloaded and printed
+10. Status becomes `PRINTED`
+
+---
+
+## 5. Data Model
+
+### Order Object
+
+```json
+{
+  "id": "cmk4wxual00008letzam0df3c",
+  "otpCode": "17207",
+  "status": "PENDING",
+  "studentId": "dkufwifgwfgwgw",
+  "createdAt": "2026-01-08T03:54:08.061Z",
+  "prints": [
+    {
+      "id": "cmk4wxuda00018lettecj9ajl",
+      "fileUrl": "https://storage.googleapis.com/mits-print-bucket/pdfs/06a6d8a7-8924-471d-afff-2d14cbf367e6.pdf",
+      "copies": 1,
+      "colorMode": "BLACK_WHITE",
+      "orientation": "PORTRAIT",
+      "printOnBothSides": false,
+      "pageRange": "ALL",
+      "customRange": null
+    }
+  ],
+  "student": {
+    "id": "dkufwifgwfgwgw",
+    "email": "mail@mgits.ac.in",
+    "name": "John Smith"
+  }
+}
 ```
-~sankar
+
+## Conclusion
+
+MITS PRINT transforms a traditionally manual, crowded, and error-prone printing process into a fully automated, secure, and scalable digital workflow. By combining cloud storage, online payments, real-time job queuing, and an on-premise printer execution service, the system eliminates long queues, reduces staff workload, and ensures that every print job is traceable, paid for, and correctly fulfilled.
+
+The architecture separates user interaction, business logic, file storage, and physical printing into independent components, allowing the system to remain reliable even under high demand during lab submissions and semester endings. With proper authentication, payment verification, and job tracking, the platform guarantees that only authorized and paid print requests reach the printers.
+
+This system is designed not only to solve the current needs of the MITS store, but also to scale for future expansion, including multiple printers, enhanced monitoring, and advanced queue management. With its modular design and modern technology stack, MITS PRINT provides a strong foundation for a fully digital campus printing infrastructure.
+
+---

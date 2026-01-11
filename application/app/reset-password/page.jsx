@@ -5,7 +5,7 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import DotLoader from "../../components/DotLoader";
 
-const LoginForm = () => {
+const RestPassword = () => {
 
 
     
@@ -51,42 +51,33 @@ const LoginForm = () => {
 
         <div className='w-full flex justify-center items-center h-[70%] min-lg:w-[60%] min-lg:h-full'>
 
+        
+        <form onSubmit={handleSubmit} className='w-[90%] max-w-[660px] h-[300px] bg-secondary-color shadow-gray-400 shadow-lg rounded-2xl py-6 flex flex-col '>
 
-        <form onSubmit={handleSubmit} className='w-[90%] max-w-[660px] h-[400px] bg-secondary-color shadow-gray-400 shadow-lg rounded-2xl py-6 flex flex-col '>
+            <h1 className=' text-center w-full text-foreground font-semibold text-xl pt-4'> Reset Password</h1>
 
-            
-            <span className='text-2xl text-center w-full text-foreground font-semibold text-3xl'> Login</span>
             {/* EMAIL */}
             <div className='w-full h-[80px] flex flex-col px-6 gap-3 mb-6' >
-            <label className='text-text-primary-color font-semibold  text-xl'>College mail ID :</label>
-            <input type="email" className='border-1 border-gray-400 h-[50px] p-2 text-lg rounded-lg outline-0 focus:border-2 focus:border-green-500' placeholder='student email'   required autoComplete='college-email' name='email'/>
+            <label className='text-text-primary-color   text-lg'>College mail: </label>
+            <input type="email" className='border-1 border-gray-400 h-[50px] p-2 text-lg rounded-lg outline-0 focus:border-2 focus:border-green-500' placeholder='Enter college email'   required autoComplete='college-email' name='email'/>
             </div>
 
-                {       /* PASSWORD */}
-               <div className='w-full h-[80px] flex flex-col px-6 gap-3 mb-5'>
-            <label className='text-text-primary-color font-semibold text-xl'>Password :</label>
-            <input type="password" className='border-1 border-gray-400 h-[50px] p-2 text-lg rounded-lg outline-0 focus:border-2 font focus:border-green-500' placeholder='password'  required name='password' autoComplete='current-password'/>
-            </div>
-
-                <div className='flex items-center justify-end w-full px-6 '>
-
-                {/* <p className="text-blue-400 font-serif cursor-pointer hover:text-blue-300" onClick={()=>window.location.href="/reset-password"}>Forgot password ?</p> */}
-
-                </div>
+           
+                
                 <p className="py-1 px-8 text-red-500 font-medium text-left h-[30px]">{"  "} {error}</p>
 
               
         
             <div className='flex items-center justify-center w-full px-6 '>
-                <button type='submit' className='bg-green-600 text-white h-[50px] w-full cursor-pointer rounded-xl text-xl -semibold hover:bg-green-500  transition-all delay-75 flex justify-center items-center' > {load? <DotLoader/> :"Login"}</button>
+                <button type='submit' className='bg-green-600 text-white h-[50px] w-full cursor-pointer rounded-xl text-xl -semibold hover:bg-green-500  transition-all delay-75 flex justify-center items-center' > {load? <DotLoader/> :"Send OTP"}</button>
             </div>
 
             
-        </form>
-        </div>
+        </form></div>
+     
     </section>
   )
   
 }
 
-export default LoginForm
+export default RestPassword;
