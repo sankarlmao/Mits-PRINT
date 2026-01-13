@@ -42,7 +42,7 @@ const Login = () => {
       <div className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-yellow-200/30 rounded-full blur-[140px]" />
 
 {/* Brand Header */}
-<div className="w-full flex flex-col items-center gap-3 py-8 absolute top-19">
+<div className="w-full flex flex-col items-center gap-3 py-8 absolute min-md:top-14">
 
   {/* Brand row */}
   <div className="flex items-center gap-4">
@@ -59,7 +59,7 @@ const Login = () => {
     {/* </div> */}
 
     {/* Brand name */}
-    <span className="text-3xl font-semibold tracking-tight text-gray-900">
+    <span className="text-3xl font-semibold tracking-tight text-gray-900 max-md:text-xl">
       MITS PRINT
     </span>
 
@@ -72,13 +72,13 @@ const Login = () => {
       alt="College Logo"
       width={150}
       height={50}
-      className="opacity-90 rounded-2xl"
+      className="opacity-90 rounded-xl"
     />
   </div>
 
   {/* Tagline */}
-  <p className="text-sm text-gray-500 font-rubik tracking-wide text-center">
-    Smart way to print lab records &amp; project reports
+  <p className="text-sm text-gray-800 font-rubik tracking-wide text-center">
+    Smart way to print lab outputs &amp; project reports
   </p>
 
 </div>
