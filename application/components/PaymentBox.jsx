@@ -37,28 +37,15 @@ export default function PaymentBox({ open, onClose, amount, files }) {
             body: JSON.stringify(response),
           });
 
-          const d = await res.json();
+          const verify = await res.json();
 
-            if (d.success) {
+            if (verify.success) {
+
+              //upload metadata to SERVER
+              const data=   await startUploadMetaData(files)
 
             //show screen
-              setLoading(true);
-              const uploads = await  getSignedUploadUrls(files)
-              console.log(uploads)
-              for (let i = 0; i < files.length; i++) {
-                setCurrentFileIndex(i);
-                setProgress(0);
-
-                await axios.put(uploads[i].uploadUrl, files[i].file, {
-                  headers: { "Content-Type": files[i].file.type },
-                  onUploadProgress: (e) => {
-                    setProgress(Math.round((e.loaded * 100) / e.total));
-                  },
-                });
-              }
-
-              setAllUploaded(true);
-              const data = await startUploadMetaData(files,uploads)
+              
             if(data.success){
                   setLoading(false)
                   onClose()
@@ -78,6 +65,7 @@ export default function PaymentBox({ open, onClose, amount, files }) {
       theme: { color: "#3399cc" },
     };
   const rzp = new (window).Razorpay(options);
+    onClose()
     rzp.open();
   }
 

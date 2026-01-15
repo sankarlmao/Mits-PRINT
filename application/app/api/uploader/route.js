@@ -6,8 +6,9 @@ import { randomUUID } from "crypto";
 export  async function POST(req){
 
     const formData = await req.formData()
-
-    const files = formData.getAll('files');
+    
+    const files = formData.getAll('files'); 
+    console.log(files+"HI")
 
      if (!Array.isArray(files) || files.length === 0) {
     return NextResponse.json({ error: "Invalid files" }, { status: 400 });

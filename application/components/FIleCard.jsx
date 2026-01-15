@@ -23,7 +23,7 @@ const FileCard = ({item, update, removeFile, index}) => {
             {/* Copies */}
             <div className="flex items-center gap-2">
               <span>Copies</span>
-                 <select className="h-8 px-2 text-sm border rounded-md" onChange= { e=> update(index, "copies",Number.parseInt(e.target.value))}>
+                 <select className="h-8 px-2 text-sm border rounded-md" onChange= { e=> update(item.id, "copies",Number.parseInt(e.target.value))}>
     {[1,2,3,4,5,6,7,8,9,10].map(n => (
       <option key={n} value={n}> {n}</option>
     ))}
@@ -36,7 +36,7 @@ const FileCard = ({item, update, removeFile, index}) => {
               <select
               className="h-8 px-2 text-sm border rounded-md"
                 onChange={e =>
-                  update(index, "color", e.target.value)
+                  update(item.id, "color", e.target.value)
                 }
               >
                 <option value="BLACK_WHITE">B&W</option>
@@ -53,7 +53,7 @@ const FileCard = ({item, update, removeFile, index}) => {
                 type="checkbox"
                 checked={item.doubleSide}
                 onChange={e =>
-                  update(index, "doubleSide", e.target.checked)
+                  update(item.id, "doubleSide", e.target.checked)
                 }
               />
               Both sides
@@ -67,7 +67,7 @@ const FileCard = ({item, update, removeFile, index}) => {
               <select
               className="h-8 px-2 text-sm border rounded-md"
                 onChange={e =>
-                  update(index, "orientation", e.target.value)
+                  update(item.id, "orientation", e.target.value)
                 }
               >
                 <option value="PORTRAIT">Portrait</option>
@@ -83,7 +83,7 @@ const FileCard = ({item, update, removeFile, index}) => {
               className="h-8 px-2 text-sm border rounded-md"
                 
                 onChange={e =>{
-                  update(index, "pagesRange", e.target.value)
+                  update(item.id, "pagesRange", e.target.value)
                    if(e.target.value==="CUSTOM") setCustomValueClicked(true);
                    else setCustomValueClicked(false)
                 }
@@ -113,7 +113,7 @@ const FileCard = ({item, update, removeFile, index}) => {
 
     // Allow only numbers and dash
     if (/^[0-9-]*$/.test(value)) {
-      update(index, "pagesCustomValue", value);
+      update(item.id, "pagesCustomValue", value);
     }
   }}
 />
@@ -124,9 +124,37 @@ const FileCard = ({item, update, removeFile, index}) => {
 
 
           </div>
+          {/* Upload Progress */}
+<div className="space-y-1">
+  {/* Progress Bar */}
+  <div className="w-full h-2 bg-gray-200 rounded overflow-hidden">
+    <div
+      className={`h-full transition-all duration-300 ${
+        item.uploadStatus === "uploaded"
+          ? "bg-green-500"
+          : item.uploadStatus === "error"
+          ? "bg-red-500"
+          : "bg-blue-500"
+      }`}
+      style={{ width: `${item.uploadProgress || 0}%` }}
+    />
+  </div>
+
+  {/* Status Text */}
+  <div className="flex justify-between text-xs text-gray-600">
+    <span>
+      {item.uploadStatus === "waiting" && "Waiting to upload"}
+      {item.uploadStatus === "uploading" && "Uploading..."}
+      {item.uploadStatus === "uploaded" && "Uploaded"}
+      {item.uploadStatus === "error" && "Upload failed"}
+    </span>
+    <span>{item.uploadProgress || 0}%</span>
+  </div>
+</div>
+
 
           <button
-            onClick={() => removeFile(index)}
+            onClick={() => removeFile(item)}
             className="text-red-500 font-light text-lg cursor-pointer" 
           >
             Remove

@@ -1,5 +1,4 @@
 
-
 import { getPdfPageCount } from "../../lib/getPagesCount"
 
 
@@ -75,20 +74,20 @@ export async function calculateAmountServer(files){
 
 
 
-export  async function startUploadMetaData(files,uploads) {
+export  async function startUploadMetaData(files) {
 
 
-    const dataWithOutFILE = files.map(({ file, ...rest }) => rest);
-
-    const fileUrls = uploads.map(u=>u.fileUrl)
+    const myFiles = files.map(({ file, ...rest }) => rest);
+    console.log(myFiles)
+    // const 
     
-    const metadata = dataWithOutFILE.map((item,index)=>({
-        ...item,
-        fileUrl:fileUrls[index]
-    }))
+    // const metadata = dataWithOutFILE.map((item,index)=>({
+    //     ...item,
+    //     fileUrl:fileUrls[index]
+    // }))
 
     const formData = new FormData();
-     metadata.forEach(item => {
+     myFiles.forEach(item => {
     formData.append("metadata", JSON.stringify(item));
     });
 
@@ -108,11 +107,11 @@ export  async function startUploadMetaData(files,uploads) {
 
 
 
-export async function getSignedUploadUrls(fils){
+export async function getSignedUploadUrls(files){
 
 
 
-const files = fils.map(file=>file.file)
+// const files = fils.map(file=>file.file)
 console.log(files)
 const formData = new FormData();
 
@@ -134,3 +133,6 @@ files.forEach(file => {
 
     return uploads;
     }
+
+
+

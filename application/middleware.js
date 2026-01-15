@@ -7,11 +7,18 @@ export async function middleware(req) {
  
   if (
     pathname === "/login" ||
-    pathname ==="/reset-password" ||
+    pathname ==="/login1" ||
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/_next") ||
     pathname === "/favicon.ico" ||
     pathname === "/college_logo.png" ||
+    pathname === "/mitsprint.png" ||
+    pathname === "/icon.png" ||
+    pathname === "/icon-512.png" ||
+    pathname === "/icon-192.png" ||
+    pathname === "/site.webmanifest" ||
+    pathname === "/apple-icon.png" ||
+    pathname === "/apple-touch-icon.png" ||
     pathname === "/api/file" ||
     pathname === "/api/printer/status" ||
     pathname === "/api/file/update" 

@@ -1,92 +1,155 @@
-
 "use client"
-import {signIn} from "next-auth/react"
-import Image from 'next/image'
-import React, { useState } from 'react'
-import DotLoader from "../../components/DotLoader";
+import DotLoader from "../../components/DotLoader"
+import { signIn } from "next-auth/react"
+import Image from "next/image"
+import React, { useState } from "react"
 
-const LoginForm = () => {
-
-
-    
-    const [error, setError] = useState();
-    const [load, setLoad] = useState(false);
+const Login = () => {
+  const [error, setError] = useState(null)
+    const [load, setLoad] = useState(false)
+  
     async function handleSubmit(e) {
-    setLoad(true)
-    e.preventDefault();
-
-    const form = e.currentTarget;
-    const res = await signIn("credentials", {
-      email: form.email.value,
-      password: form.password.value,
-      redirect:false,
-      callbackUrl: '/',
-    });
-
-    if (res?.error) {
-      setError("Invalid credentails entered")
-      setLoad(false);
-    } else {
+      e.preventDefault()
+      setLoad(true)
+  
+     
+      const form = e.currentTarget
+      console.log(form)
+      const res = await signIn("credentials", {
+        email: form.email.value,
+        password: form.password.value,
+        redirect: false,
+        callbackUrl: "/",
+      })
+  
+      if (res?.error) {
+        setError("Invalid credentials entered")
         setLoad(false)
-        window.location.href = res.url ?? "/";
-
+      } else {
+        setLoad(false)
+        window.location.href = res?.url ?? "/"
+      }
     }
 
-  }
-
-
-
   return (
-    <section className='bg-200 bg-white-600 h-screen w-full flex flex-col items-center justify-center min-lg:flex-row'>
-        
+<section className="w-full h-screen relative overflow-hidden bg-[#eceaf1] flex flex-col">
+      {/* soft grid overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:32px_32px]" />
 
-        <div className='bg-[#f4312a] w-full h-[30%] min-lg:w-[40%] min-md:h-full flex  flex-col justify-center items-center gap-5  '>
-        
-        <Image src="/college_logo.png" alt='College Logo ' height={100} width={400} className='rounded-xl max-md:w-[290px]' quality={100}/>
-        <h1 className=' font-bold text-white text-4xl text-center font-changa min-lg:text-7xl'>MITS PRINT </h1>
+      {/* pastel blobs */}
+      <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-pink-300/30 rounded-full blur-[140px]" />
+      <div className="absolute top-40 -right-40 w-[500px] h-[500px] bg-blue-300/30 rounded-full blur-[140px]" />
+      <div className="absolute bottom-20 right-20 w-[400px] h-[400px] bg-yellow-200/30 rounded-full blur-[140px]" />
 
-    <p className=' px-2 text-secondary-color text-lg text-center font-bold font-'>Smart approach for printing lab outputs and project reports without crowding.</p>
-        </div>
+{/* Brand Header */}
+<div className="w-full flex flex-col items-center gap-3 py-8 absolute min-md:top-14">
+
+  {/* Brand row */}
+  <div className="flex items-center gap-4">
+
+    {/* Red M logo */}
+    {/* <div className="w-[50px] h-[50px] rounded-xl bg-red-500 flex items-center justify-center text-white font-bold text-2xl"> */}
+      <Image
+      src="/mitsprint.png"
+      alt="M"
+      width={50}
+      height={50}
+      className="opacity-100 rounded-2xl"
+    />
+    {/* </div> */}
+
+    {/* Brand name */}
+    <span className="text-3xl font-semibold tracking-tight text-gray-900 max-md:text-xl">
+      MITS PRINT
+    </span>
+
+    {/* Divider */}
+    <div className="w-[1px] h-10 bg-gray-400/40" />
+
+    {/* College logo */}
+    <Image
+      src="/college_logo.png"
+      alt="College Logo"
+      width={150}
+      height={50}
+      className="opacity-90 rounded-xl"
+    />
+  </div>
+
+  {/* Tagline */}
+  <p className="text-sm text-gray-800 font-rubik tracking-wide text-center">
+    Smart way to print lab outputs &amp; project reports
+  </p>
+
+</div>
 
 
-        <div className='w-full flex justify-center items-center h-[70%] min-lg:w-[60%] min-lg:h-full'>
 
 
-        <form onSubmit={handleSubmit} className='w-[90%] max-w-[660px] h-[400px] bg-secondary-color shadow-gray-400 shadow-lg rounded-2xl py-6 flex flex-col '>
+     
 
-            
-            <span className='text-2xl text-center w-full text-foreground font-semibold text-3xl'> Login</span>
-            {/* EMAIL */}
-            <div className='w-full h-[80px] flex flex-col px-6 gap-3 mb-6' >
-            <label className='text-text-primary-color font-semibold  text-xl'>College mail ID :</label>
-            <input type="email" className='border-1 border-gray-400 h-[50px] p-2 text-lg rounded-lg outline-0 focus:border-2 focus:border-green-500' placeholder='student email'   required autoComplete='college-email' name='email'/>
-            </div>
+      {/* Login card */}
+      <div className="relative z-10 flex-1 flex items-center justify-center w-full">        
+        <div className="bg-white/70 backdrop-blur-2xl border border-black/5 rounded-3xl shadow-xl px-12 py-14 w-[420px] max-w-[90%]">
 
-                {       /* PASSWORD */}
-               <div className='w-full h-[80px] flex flex-col px-6 gap-3 mb-5'>
-            <label className='text-text-primary-color font-semibold text-xl'>Password :</label>
-            <input type="password" className='border-1 border-gray-400 h-[50px] p-2 text-lg rounded-lg outline-0 focus:border-2 font focus:border-green-500' placeholder='password'  required name='password' autoComplete='current-password'/>
-            </div>
+                <h2 className="text-2xl font-semibold text-gray-900 text-center mb-2">
+                  Welcome 
+                </h2>
 
-                <div className='flex items-center justify-end w-full px-6 '>
+                <p className="text-gray-500 text-sm text-center mb-8">
+                  Sign in to continue to MITS Print
+                </p>
 
-                {/* <p className="text-blue-400 font-serif cursor-pointer hover:text-blue-300" onClick={()=>window.location.href="/reset-password"}>Forgot password ?</p> */}
+              <div className="space-y-5">
+                <form
+                onSubmit={handleSubmit}>
+                  {/* Email */}
+                  <div>
+                    <label className="text-sm text-gray-600">College Email</label>
+                    <div className="mt-1 flex items-center bg-white/60 backdrop-blur-md border border-black/10 rounded-xl">
+                      <input
+                        name="email"
+                        required
+                        type="email"
+                        placeholder="admno@mgits.ac.in"
+                        className="w-full py-3 bg-transparent outline-none text-gray-900 placeholder-gray-400 rounded-xl px-4"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Password */}
+                  <div>
+                    <label className="text-sm text-gray-600">Password</label>
+                    <div className="mt-1 flex items-center bg-white/60 backdrop-blur-md border border-black/10 rounded-xl ">
+                      <input
+                        name="password"
+                        type="password"
+                        required
+                        placeholder="••••••••"
+                        className="w-full py-3 bg-transparent outline-none text-gray-900 placeholder-gray-400 px-4 rounded-xl"
+                      />
+                    </div>
+                  </div>
+                    {/* Error */}
+                  <p className="text-red-500 text-sm h-[40px] py-3 px-3">
+                    {error}
+                  </p>
+
+                  <button
+                  type="submit"
+                  className="w-full py-3 h-[50px] bg-black text-white rounded-xl font-medium hover:bg-black/90 transition flex justify-center items-center cursor-pointer">
+                  {load ? <DotLoader/> : "Login"}
+                </button>
+                </form>
+
+
 
                 </div>
-                <p className="py-1 px-8 text-red-500 font-medium text-left h-[30px]">{"  "} {error}</p>
-
-              
-        
-            <div className='flex items-center justify-center w-full px-6 '>
-                <button type='submit' className='bg-green-600 text-white h-[50px] w-full cursor-pointer rounded-xl text-xl -semibold hover:bg-green-500  transition-all delay-75 flex justify-center items-center' > {load? <DotLoader/> :"Login"}</button>
+              </div>
             </div>
 
-            
-        </form>
-        </div>
-    </section>
+          </section>
   )
-  
 }
 
-export default LoginForm
+export default Login

@@ -1,6 +1,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Changa+One:ital@0;1&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -19,7 +19,9 @@
   --color-text-primary-color:var(--text-primary-color);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-changa:"Changa One",cursive;
+  --font-changa:"Changa One",sans-serif;
+  --font-rubik:"Rubik",sans-serif;
+  --font-inter:"inter",sans-serif;
 }
 /* 
 @media (prefers-color-scheme: dark) {

@@ -35,3 +35,16 @@ export async function deleteFromGcs(fileUrls) {
 
   return { success: true };
 }
+
+
+export async function deleteSingleFileFromGCS(fileUrl) {
+
+  try{
+    const {bucket,filePath} =parseGcsPublicUrl(fileUrl);
+    await storage.bucket(bucket).file(filePath).delete();
+  }
+  catch(err){
+    console.log("Failed to delete:",fileUrl,err)
+  }
+  
+}

@@ -15,7 +15,9 @@ const PrinterStatus = ({ printer }) => {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-sm font-semibold text-gray-900">
+          <p className="text-sm text-violet-800 font-inter">Printer status</p>
+
+          <h3 className="text-sm  text-blue-900 font-rubik">
             {printer.name}
           </h3>
 
@@ -38,12 +40,7 @@ const PrinterStatus = ({ printer }) => {
       </div>
 
       {/* Status Bar */}
-      <div className="mt-3 w-full h-[4px] bg-gray-200/70 rounded-full overflow-hidden">
-        <div
-          className={`h-full ${status.color} transition-all duration-500 shadow-inner`}
-          style={{ width: `${status.percent}%` }}
-        />
-      </div>
+     
 
       {/* Reason + Centered Message */}
       {!isReady && (
