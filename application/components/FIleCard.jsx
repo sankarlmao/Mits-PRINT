@@ -143,10 +143,11 @@ const FileCard = ({item, update, removeFile, index}) => {
   {/* Status Text */}
   <div className="flex justify-between text-xs text-gray-600">
     <span>
-      {item.uploadStatus === "waiting" && "Waiting to upload"}
-      {item.uploadStatus === "uploading" && "Uploading..."}
-      {item.uploadStatus === "uploaded" && "Uploaded"}
+      {item.uploadStatus === "preparing" && "Preparing upload..."}
+      {item.uploadStatus === "uploading" && `Uploading ${item.uploadProgress}%`}
+      {item.uploadStatus === "uploaded" && "Uploaded "}
       {item.uploadStatus === "error" && "Upload failed"}
+
     </span>
     <span>{item.uploadProgress || 0}%</span>
   </div>
