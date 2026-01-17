@@ -9,10 +9,14 @@
     "lint": "eslint",
     "postinstall": "prisma generate"
   },
+  
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "dependencies": {
     "@google-cloud/storage": "^7.18.0",
-    "@prisma/adapter-pg": "^7.1.0",
-    "@prisma/client": "^7.1.0",
+    "@prisma/adapter-pg": "7.2.0",
+    "@prisma/client": "7.2.0",
     "axios": "^1.13.2",
     "bcrypt": "^6.0.0",
     "lottie-react": "^2.4.1",
@@ -32,7 +36,7 @@
     "@types/node": "25.0.1",
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
-    "prisma": "^7.1.0",
+    "prisma": "7.2.0",
     "tailwindcss": "^4"
   }
 }
