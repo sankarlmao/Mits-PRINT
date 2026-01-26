@@ -13,7 +13,7 @@ export default function NotFound() {
         {/* Brand Logo & Title */}
         <div className="flex items-center gap-3">
           <div className=" p-1 rounded-2xl shadow-sm">
-            <Image src={'/mitsprint.png'} width={50} height={50} alt='logo' className='rounded-2xl'/>
+            <Image src={'/mitsprint.png'} width={51} height={51} alt='logo' className='rounded-2xl'/>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">
             MITS <span className="text-red-600 font-black">PRINT</span>
