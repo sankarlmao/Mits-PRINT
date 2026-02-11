@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
-import { bucket } from "../../../lib/gcs";
+import { getGCSBucket } from "../../../lib/gcs";
 
 export async function POST(req) {
+
+
+    const bucket = getGCSBucket();
+
+    if (!bucket) {
+      throw new Error("GCS not configured");
+    }
   let fileMetaData;
 
   try {
