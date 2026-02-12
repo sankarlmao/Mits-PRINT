@@ -13,7 +13,7 @@ export default function NotFound() {
         {/* Brand Logo & Title */}
         <div className="flex items-center gap-3">
           <div className=" p-1 rounded-2xl shadow-sm">
-            <Image src={'/mitsprint.png'} width={50} height={50} alt='logo' className='rounded-2xl'/>
+            <Image src={'/mitsprint.png'} width={51} height={51} alt='logo' className='rounded-2xl'/>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">
             MITS <span className="text-red-600 font-black">PRINT</span>
@@ -25,7 +25,7 @@ export default function NotFound() {
           <span className="text-[12rem] font-black leading-none text-slate-100 select-none">
             404
           </span>
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex ìtems-center justify-center">
              <div className="h-1 w-12 bg-rose-500 rounded-full mb-4 animate-pulse" />
           </div>
         </div>
@@ -47,10 +47,7 @@ export default function NotFound() {
 
       </div>
 
-      {/* Simple Footer */}
-      {/* <footer className="absolute bottom-8 text-slate-300 text-xs tracking-widest uppercase">
-        © {new Date().getFullYear()} MITS PRINT
-      </footer> */}
+      
     </div>
   );
 }

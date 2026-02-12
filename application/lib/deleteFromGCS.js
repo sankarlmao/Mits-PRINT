@@ -1,50 +1,66 @@
-import { Storage } from "@google-cloud/storage";
-import { storage } from "./gcs";
+import { getGCSBucket } from "./gcs";
 
 function parseGcsPublicUrl(fileUrl) {
-  const url = new URL(fileUrl);
+  try {
+    const url = new URL(fileUrl);
 
-  const [, bucket, ...pathParts] = url.pathname.split("/");
+    const [, bucket, ...pathParts] = url.pathname.split("/");
 
-  return {
-    bucket,
-    filePath: pathParts.join("/"),
-  };
+    return {
+      bucket,
+      filePath: pathParts.join("/"),
+    };
+  } catch {
+    return null;
+  }
 }
 
-
-
-
-
-
-
 export async function deleteFromGcs(fileUrls) {
+  const defaultBucket = getGCSBucket();
 
- await Promise.allSettled(
-  fileUrls.map(async ({ fileUrl }) => {
-    if (!fileUrl) return;
+  if (!defaultBucket) {
+    console.error("GCS not configured");
+    return { success: false };
+  }
 
-    try {
-      const { bucket, filePath } = parseGcsPublicUrl(fileUrl);
-      await storage.bucket(bucket).file(filePath).delete();
-    } catch (err) {
-      console.error("Failed to delete:", fileUrl, err);
-    }
-  })
-);
+  await Promise.allSettled(
+    fileUrls.map(async ({ fileUrl }) => {
+      if (!fileUrl) return;
+
+      try {
+        const parsed = parseGcsPublicUrl(fileUrl);
+
+        if (!parsed) return;
+
+        const { filePath } = parsed;
+
+        await defaultBucket.file(filePath).delete();
+      } catch (err) {
+        console.error("Failed to delete:", fileUrl, err);
+      }
+    })
+  );
 
   return { success: true };
 }
 
-
 export async function deleteSingleFileFromGCS(fileUrl) {
+  const bucket = getGCSBucket();
 
-  try{
-    const {bucket,filePath} =parseGcsPublicUrl(fileUrl);
-    await storage.bucket(bucket).file(filePath).delete();
+  if (!bucket) {
+    console.error("GCS not configured");
+    return;
   }
-  catch(err){
-    console.log("Failed to delete:",fileUrl,err)
+
+  try {
+    const parsed = parseGcsPublicUrl(fileUrl);
+
+    if (!parsed) return;
+
+    const { filePath } = parsed;
+
+    await bucket.file(filePath).delete();
+  } catch (err) {
+    console.error("Failed to delete:", fileUrl, err);
   }
-  
 }

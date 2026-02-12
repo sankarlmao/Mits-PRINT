@@ -1,14 +1,7 @@
 import { NextResponse } from "next/server";
-import { getGCSBucket } from "../../../lib/gcs";
+import { minioClient } from "../../../lib/minio";
 
 export async function POST(req) {
-
-
-    const bucket = getGCSBucket();
-
-    if (!bucket) {
-      throw new Error("GCS not configured");
-    }
   let fileMetaData;
 
   try {
@@ -43,22 +36,26 @@ export async function POST(req) {
     }
   }
 
+  console.log(fileMetaData + "froms erver")
   const uploads = await Promise.all(
     fileMetaData.map(async ({ id, type }) => {
-      const fileName = `pdfs/${id}.pdf`;
-      const file = bucket.file(fileName);
+      const objectName = `pdfs/${id}.pdf`;
 
-      const [uploadUrl] = await file.getSignedUrl({
-        version: "v4",
-        action: "write",
-        expires: Date.now() + 6 * 60 * 1000,
-        contentType: type,
-      });
+      const uploadUrl = await minioClient.presignedPutObject(
+        process.env.BUCKET_NAME,
+        objectName,
+        60 * 6 // 6 minutes
+      );
+      const downloadUrl = await minioClient.presignedGetObject(
+        process.env.BUCKET_NAME,
+        objectName,
+        60 * 15 //15 minutes
+        );
 
       return {
         id,
         uploadUrl,
-        fileUrl: `https://storage.googleapis.com/${bucket.name}/${fileName}`,
+        fileUrl:downloadUrl
       };
     })
   );

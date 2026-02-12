@@ -106,7 +106,7 @@ const Homepage = () => {
 
       // First I need to create a Map hashmap with lookup O(1)
         const urlMap = new Map(urls.map(u=>[u.id,u]));
-      
+        
         setFiles((prev) =>
         prev.map((f) => {
           const match = urlMap.get(f.id);
