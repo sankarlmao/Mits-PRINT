@@ -1,8 +1,8 @@
 "use server"
-import {  deleteSingleFileFromGCS } from "../../lib/deleteFromGCS"
+import { deleteSingleFileFromMinio } from "@/lib/deleteFromMinIO";
 
 
 export async function deleteFile(fileUrl){
 
-    await deleteSingleFileFromGCS(fileUrl);
+    await deleteSingleFileFromMinio(fileUrl);
 }

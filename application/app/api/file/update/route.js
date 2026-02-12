@@ -1,4 +1,4 @@
-import { deleteFromGcs } from "../../../../lib/deleteFromGCS";
+import { deleteFromMinio } from "@/lib/deleteFromMinIO";
 import { updateOrderStatus } from "../../../../services/orders.service";
 import { NextResponse } from "next/server";
 
@@ -24,7 +24,7 @@ export async function POST(req){
     
     //  delete the file from the bucket (GCS)
 
-    await deleteFromGcs(urls)
+    await deleteFromMinio(urls)
 
 
     return NextResponse.json({message:"FILES DELETED FROM CLOUND !!", updationStatus: true})

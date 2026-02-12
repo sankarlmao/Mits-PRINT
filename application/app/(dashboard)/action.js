@@ -98,7 +98,7 @@ export async function getSignedUploadUrls(fileMetaData){
 
     try{
 
-    const res = await fetch('/api/uploader', {
+    const res = await fetch('/api/minio-uploadurl', {
     method: 'POST',
     body: JSON.stringify(fileMetaData),
     });
