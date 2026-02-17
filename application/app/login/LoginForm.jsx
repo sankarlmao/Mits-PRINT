@@ -137,7 +137,7 @@ const Login = () => {
 
                   <button
                   type="submit"
-                  className="w-full py-3 h-[50px] bg-black text-white rounded-xl font-medium hover:bg-red-600 transition flex justify-center items-center cursor-pointer">
+                  className="w-full py-3 h-[50px] bg-black text-white rounded-xl font-medium hover:bg-green-600 transition flex justify-center items-center cursor-pointer">
                   {load ? <DotLoader/> : "Login"}
                 </button>
                 </form>
