@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import UploadProgressBar from "./UploadProgressBar";
 import GreenSpinner from './PriceLoadingAnimation';
+import { loadScript } from '@/utils/loadScript.razorpay';
 
 
 export default function PaymentBox({ open, onClose, amount, files }) {
@@ -72,9 +73,19 @@ export default function PaymentBox({ open, onClose, amount, files }) {
     const handlePay = async () => {
 
       setRazorpayLoading(true);
-      loadRazorpay()
-      setRazorpayLoading(false)
 
+      try{
+        const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+
+        if(!res) window.alert("Razorpay failed to open. check your network and try again");
+          loadRazorpay()
+
+
+      }catch(err){
+        console.log(err)
+      }
+
+      setRazorpayLoading(false)
 
   }
 
