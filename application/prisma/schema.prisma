@@ -151,35 +151,35 @@ model Order {
 }
 
 
-model Payment {
-  
-  id String @id @default(cuid())
-  amount  Int //store as paisa  (10.25 as 1025)
-  currency String @default("INR")
-  status PaymentStatus @default(PENDING)
+  model Payment {
+    
+    id String @id @default(cuid())
+    amount  Int //store as paisa  (10.25 as 1025)
+    currency String @default("INR")
+    status PaymentStatus @default(PENDING)
 
 
 
-  orderId String @unique
-  order Order @relation(fields: [orderId] ,references: [id])
+    orderId String @unique
+    order Order @relation(fields: [orderId] ,references: [id])
 
-  //razorpay fields
-  razorpayOrderId  String @unique
-  razorpayPaymentId String?
-  razorpaySignature String?
-
-
-  //Student
-  studentId String @unique
-  student Student @relation(fields: [studentId], references: [id])
+    //razorpay fields
+    razorpayOrderId  String @unique
+    razorpayPaymentId String?
+    razorpaySignature String?
 
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    //Student
+    studentId String
+    student Student @relation(fields: [studentId], references: [id])
 
 
-  @@index([razorpayOrderId])
-}
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+
+    @@index([razorpayOrderId])
+  }
 
 
 

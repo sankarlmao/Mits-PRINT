@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { razorpay } from "../../../utils/razorpay";
+import { createOrder } from "../../../services/orders.service";
 
 
 export async function POST(req) {
@@ -13,21 +14,30 @@ export async function POST(req) {
   }
     const body = await req.json();
 
-    const {amount} = body;
-
-  const order = await razorpay.orders.create({
+    const {amount,files} = body;
+    
+  const razorpayOrder = await razorpay.orders.create({
     amount:amount, 
     currency: "INR",
     receipt: `rcpt_${Date.now()}`,
   });
 
-  return NextResponse.json(order);
+  console.log(razorpayOrder)
+
+  //add the files to db and get the orderId (purchase id)
+  const printOrderId = await createOrder(files,razorpayOrder)
+
+
+  
+  return NextResponse.json({razorpayOrder,printOrderId});
 
 
 
   }catch(er){
    return NextResponse.json(
-      { error: "Failed to create payment order" },
+      { error: "Failed to create payment order" ,
+        mess:er.message
+      },
       { status: 500 }
     );
   }

@@ -4,9 +4,13 @@ import { authOptions } from "../app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { generate5DigitCode } from "./otp";
 
-export  async function createOrder(items){
+export  async function createOrder(items,razorpayOrder){
 
+  //items->file 
+  //razorpayOrder the payment details
   //FIND USER 
+
+  console.log(razorpayOrder)
   const session = await getServerSession(authOptions)
   const user = await prisma.student.findUnique({
     where:{
@@ -31,6 +35,13 @@ export  async function createOrder(items){
           customRange: item.customRange,
         })),
       },
+      payment: {
+        create:{
+          amount:razorpayOrder.amount,
+          razorpayOrderId:razorpayOrder.id,
+          studentId:user.id
+        }
+       }
     },
   });
 
