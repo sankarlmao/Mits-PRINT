@@ -6,8 +6,8 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 import UploadProgressBar from "./UploadProgressBar";
 import GreenSpinner from './PriceLoadingAnimation';
 import { loadScript } from '@/utils/loadScript.razorpay';
-import { setWithExpiry } from '@/utils/tempStorageLocal';
-
+import { getWithExpiry, setWithExpiry } from '@/utils/tempStorageLocal';
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function PaymentBox({ open, onClose, amount, files }) {
   const [loading, setLoading] = useState(false);
@@ -17,6 +17,7 @@ export default function PaymentBox({ open, onClose, amount, files }) {
   const [allUploaded, setAllUploaded] = useState(false);
 
 
+  const router = useRouter();
   useEffect(()=>{
  
   })
@@ -38,37 +39,8 @@ export default function PaymentBox({ open, onClose, amount, files }) {
       image:"/mitsprint.png",
       order_id: razorpayOrder.id,
       handler: async function (response) {
-          //   const res = await fetch("/api/verify", {
-          //   method: "POST",
-          //   headers: { "Content-Type": "application/json" },
-          //   body: JSON.stringify(response),
-          // });
-
-          // const verify = await res.json();
-
-          //   if (verify.success) {
-
-          //     //upload metadata to SERVER
-          //     const data=   await startUploadMetaData(files)
-
-          //   //show screen
-              
-          //   if(data.success){
-          //         setLoading(false)
-          //         onClose()
-          //         window.location.href=`/myprints?order_id=${data.orderId}`
-          
-          //   }
-          //   else{
-          //     alert("Something went wrong!!!!")
-          //   }
-           
-          //   } 
-          //   else {
-          //     alert("Payment verification failed");
-          //   }
-
-          alert("need to write the logic")
+          const orderId = getWithExpiry("printOrderId");
+          router.push(`/verifying-payment?orderId=${orderId}`);
     },
 
       theme: { color: "#3399cc" },
