@@ -57,6 +57,7 @@ export async function getOrderfromDB(){
 const orders = await prisma.order.findMany({
   where: {
         status: "PENDING",
+        paymentStatus:"PAID"
     },
   include: {
     prints: {

@@ -20,6 +20,7 @@ export async function middleware(req) {
     pathname === "/apple-icon.png" ||
     pathname === "/apple-touch-icon.png" ||
     pathname === "/api/file" ||
+    pathname === "/api/webhook" ||
     pathname === "/api/printer/status" ||
     pathname === "/api/file/update" 
 

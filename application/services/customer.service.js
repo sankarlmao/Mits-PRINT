@@ -18,7 +18,8 @@ export async function getMyOrder(orderId){
     const order = await prisma.order.findUnique({
         where:{
                 id:orderId,
-                studentId:user.id
+                studentId:user.id,
+                paymentStatus:"PAID" 
         }
     });
 
@@ -40,12 +41,17 @@ export async function getOrdersFromServer(){
     const orders = await prisma.student.findUnique({
     where: {
     email: session.user.email,
+
   },
   select: {
     id: true,
     email: true,
     name: true,
-    orders: {
+    orders: 
+    {
+      where:{
+        paymentStatus:"PAID"
+      },
       select: {
         id: true,
         otpCode: true,
@@ -55,6 +61,7 @@ export async function getOrdersFromServer(){
       orderBy: {
         createdAt: "desc", // latest first
       },
+      
     },
   },
 });

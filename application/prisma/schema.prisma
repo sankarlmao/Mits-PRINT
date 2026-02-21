@@ -28,7 +28,7 @@ enum Orientation {
 
 enum PaymentStatus {
   PENDING
-  SUCCESS
+  PAID
   FAILED
   REFUNDED
 }
@@ -138,7 +138,7 @@ model Order {
   status PrintStatus @default(PENDING)
   studentId String
   student Student @relation(fields: [studentId],references: [id])
-
+  paymentStatus PaymentStatus @default(PENDING)
   prints Print[]
 
   //payment
@@ -166,14 +166,14 @@ model Order {
     //razorpay fields
     razorpayOrderId  String @unique
     razorpayPaymentId String?
-    razorpaySignature String?
+    method String?
 
-
+    verified Boolean @default(false)
     //Student
     studentId String
     student Student @relation(fields: [studentId], references: [id])
 
-
+    
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
